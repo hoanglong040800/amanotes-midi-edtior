@@ -1,10 +1,14 @@
 import './styles/App.scss';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/index.route';
+
+
 
 function App() {
   return (
-    <div className="app">
-      <h1>MIDI Piano Roll Editor</h1>
-    </div>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 
