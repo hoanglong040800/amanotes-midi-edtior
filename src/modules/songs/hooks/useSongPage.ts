@@ -26,9 +26,17 @@ export function useSongPage() {
 		}
 	}
 
+	function onCallbackSubmit(song: Song) {
+		setSongs((prevSongs) => {
+			const updatedSongs = [...prevSongs, song];
+			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
+			return updatedSongs;
+		});
+	}
+
 	useEffect(() => {
 		loadSongs();
 	}, []);
 
-	return { songs, loading };
+	return { songs, loading, onCallbackSubmit };
 }
