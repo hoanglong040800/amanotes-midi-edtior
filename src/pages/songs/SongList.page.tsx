@@ -2,10 +2,8 @@ import { useState } from "react";
 import Container from "@mui/material/Container";
 import { useSongPage } from "../../modules/songs/hooks/useSongPage";
 import SongListHeader from "../../modules/songs/components/list-header/SongListHeader";
-import SongCard from "../../modules/songs/components/card/SongCard";
-import SongMetadata from "../../modules/songs/components/metadata/SongMetadata";
+import SongList from "../../modules/songs/components/list/SongList";
 import SongActionPopup from "../../modules/songs/components/action-popup/SongActionPopup";
-import "./SongList.page.scss";
 
 const SongListPage = () => {
 	const { songs, loading, onCallbackSubmit } = useSongPage();
@@ -18,16 +16,7 @@ const SongListPage = () => {
 		<>
 			<Container maxWidth="md">
 				<SongListHeader onAddClick={handleAddClick} />
-				{loading ? (
-					<div>Loading songs...</div>
-				) : (
-					songs.map((song, idx) => (
-						<div key={idx} className="item">
-							<SongCard song={song} />
-							<SongMetadata song={song} />
-						</div>
-					))
-				)}
+				<SongList songs={songs} loading={loading} />
 			</Container>
 
 			<SongActionPopup
