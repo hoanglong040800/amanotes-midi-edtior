@@ -13,6 +13,14 @@
 		font-size: 1.5rem;
 		font-weight: 700;
 	}
+
+	.backButton {
+		margin-bottom: 24px;
+
+		:global(.MuiButton-startIcon) {
+			margin-right: 12px;
+		}
+	}
 }
 
 .desc {

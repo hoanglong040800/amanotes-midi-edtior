@@ -1,4 +1,4 @@
-import SongListPage from "../pages/songs/SongListPage";
+import SongManagementPage from "../pages/songs/SongManagementPage";
 import MidiEditorPage from "../pages/midi-editor/MidiEditorPage";
 import { Navigate, useRoutes } from "react-router-dom";
 
@@ -9,7 +9,7 @@ const routes = [
 	},
 	{
 		path: "/songs",
-		element: <SongListPage />,
+		element: <SongManagementPage />,
 	},
 	{
 		path: "/songs/:songId/editor",

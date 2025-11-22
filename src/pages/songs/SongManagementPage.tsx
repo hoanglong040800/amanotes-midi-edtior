@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
-import { useSongPage } from "../../modules/songs/hooks/useSongPage";
+import { useSongs } from "../../hooks/useSongs";
 import type { Song } from "../../types/song.types";
 import SongListHeader from "../../modules/songs/components/list-header/SongListHeader";
 import SongList from "../../modules/songs/components/list/SongList";
 import SongActionPopup from "../../modules/songs/components/action-popup/SongActionPopup";
-import styles from "./SongListPage.module.scss";
+import styles from "./SongManagementPage.module.scss";
 
 const SongListPage = () => {
-	const { songs, loading, onCreateSong, onUpdateSong, onDeleteSong } = useSongPage();
+	const { songs, loading, loadSongs, onCreateSong, onUpdateSong, onDeleteSong } = useSongs();
 	const [isPopupOpen, setPopupOpen] = useState(false);
 	const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+	useEffect(() => {
+		void loadSongs();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleAddClick = () => {
 		setEditingIndex(null);
