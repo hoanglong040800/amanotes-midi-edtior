@@ -10,7 +10,10 @@ export type Props = {
 const SongMetadata = ({ song }: Props) => (
 	<Stack direction="row" spacing={3} className="metadata">
 		<Typography variant="caption">Duration: {song.totalDuration}s</Typography>
-		<Typography variant="caption">Total Tracks Label: {song.trackLabels.length}</Typography>
+		<Typography variant="caption">
+			Track Labels: {song.trackLabels.slice(0, 3).join(", ")}
+			{song.trackLabels.length > 3 ? ", ..." : ""}
+		</Typography>
 		<Typography variant="caption">Notes: {song.notes.length}</Typography>
 	</Stack>
 );

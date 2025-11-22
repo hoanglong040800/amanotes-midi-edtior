@@ -2,6 +2,7 @@ import { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router-dom";
 import "./SongList.scss";
 import SongCard from "../card/SongCard";
 import SongMetadata from "../metadata/SongMetadata";
@@ -17,6 +18,10 @@ type Props = {
 
 const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) => {
 	const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
+	const navigate = useNavigate();
+	const handleOpenEditor = (index: number) => {
+		navigate(`/songs/${index}/editor`);
+	};
 
 	const handleOpenConfirm = (index: number) => setPendingDeleteIndex(index);
 	const handleCloseConfirm = () => setPendingDeleteIndex(null);
@@ -48,7 +53,7 @@ const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) =
 								<DeleteOutlineIcon fontSize="small" />
 							</IconButton>
 						</div>
-						<SongCard song={song} />
+						<SongCard song={song} onOpenEditor={() => handleOpenEditor(idx)} />
 						<SongMetadata song={song} />
 					</div>
 				))}
