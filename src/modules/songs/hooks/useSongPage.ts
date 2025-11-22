@@ -34,9 +34,17 @@ export function useSongPage() {
 		});
 	}
 
+	function onDeleteSong(index: number) {
+		setSongs((prevSongs) => {
+			const updatedSongs = prevSongs.filter((_, songIndex) => songIndex !== index);
+			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
+			return updatedSongs;
+		});
+	}
+
 	useEffect(() => {
 		loadSongs();
 	}, []);
 
-	return { songs, loading, onCallbackSubmit };
+	return { songs, loading, onCallbackSubmit, onDeleteSong };
 }

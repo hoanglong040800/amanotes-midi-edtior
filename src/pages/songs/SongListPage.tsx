@@ -4,9 +4,10 @@ import { useSongPage } from "../../modules/songs/hooks/useSongPage";
 import SongListHeader from "../../modules/songs/components/list-header/SongListHeader";
 import SongList from "../../modules/songs/components/list/SongList";
 import SongActionPopup from "../../modules/songs/components/action-popup/SongActionPopup";
+import styles from "./SongListPage.module.scss";
 
 const SongListPage = () => {
-	const { songs, loading, onCallbackSubmit } = useSongPage();
+	const { songs, loading, onCallbackSubmit, onDeleteSong } = useSongPage();
 	const [isPopupOpen, setPopupOpen] = useState(false);
 
 	const handleAddClick = () => setPopupOpen(true);
@@ -14,9 +15,9 @@ const SongListPage = () => {
 
 	return (
 		<>
-			<Container maxWidth="md">
+			<Container maxWidth="md" className={styles.editor}>
 				<SongListHeader onAddClick={handleAddClick} />
-				<SongList songs={songs} loading={loading} />
+				<SongList songs={songs} loading={loading} onDeleteSong={onDeleteSong} />
 			</Container>
 
 			<SongActionPopup

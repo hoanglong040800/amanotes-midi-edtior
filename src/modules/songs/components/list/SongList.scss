@@ -1,9 +1,20 @@
 .song-list {
 	display: flex;
 	flex-direction: column;
-}
 
-.song-list__item {
-	margin-bottom: 32px;
+	.item {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 32px;
+		padding-right: 48px;
+	}
+
+	.delete {
+		position: absolute;
+		top: 12px;
+		right: 0;
+	}
 }
 

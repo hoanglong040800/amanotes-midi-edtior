@@ -1,5 +1,5 @@
-import SongListPage from "../pages/songs/SongList.page";
-import MidiEditorPage from "../pages/midi-editor/MidiEditor.page";
+import SongListPage from "../pages/songs/SongListPage";
+import MidiEditorPage from "../pages/midi-editor/MidiEditorPage";
 import { Navigate, useRoutes } from "react-router-dom";
 
 const routes = [

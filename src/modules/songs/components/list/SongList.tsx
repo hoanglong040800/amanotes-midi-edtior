@@ -1,27 +1,72 @@
+import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import "./SongList.scss";
 import SongCard from "../card/SongCard";
 import SongMetadata from "../metadata/SongMetadata";
 import type { Song } from "../../../../types/song.types";
+import ConfirmDialog from "../../../../components/confirm-dialog/ConfirmDialog";
 
 type Props = {
 	songs: Song[];
 	loading?: boolean;
+	onDeleteSong: (index: number) => void;
 };
 
-const SongList = ({ songs, loading = false }: Props) => {
+const SongList = ({ songs, loading = false, onDeleteSong }: Props) => {
+	const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
+
+	const handleOpenConfirm = (index: number) => setPendingDeleteIndex(index);
+	const handleCloseConfirm = () => setPendingDeleteIndex(null);
+	const handleConfirmDelete = () => {
+		if (pendingDeleteIndex === null) return;
+
+		onDeleteSong(pendingDeleteIndex);
+		setPendingDeleteIndex(null);
+	};
+
 	if (loading) {
 		return <div>Loading songs...</div>;
 	}
 
+	const songNamePendingDeletion =
+		pendingDeleteIndex !== null ? songs[pendingDeleteIndex]?.name : undefined;
+
 	return (
-		<div className="song-list">
-			{songs.map((song, idx) => (
-				<div key={`${song.name}-${idx}`} className="song-list__item">
-					<SongCard song={song} />
-					<SongMetadata song={song} />
-				</div>
-			))}
-		</div>
+		<>
+			<div className="song-list">
+				{songs.map((song, idx) => (
+					<div key={`${song.name}-${idx}`} className="item">
+						<div className="delete">
+							<IconButton
+								aria-label={`Delete ${song.name}`}
+								size="small"
+								onClick={() => handleOpenConfirm(idx)}
+							>
+								<DeleteOutlineIcon fontSize="small" />
+							</IconButton>
+						</div>
+						<SongCard song={song} />
+						<SongMetadata song={song} />
+					</div>
+				))}
+			</div>
+
+			<ConfirmDialog
+				open={pendingDeleteIndex !== null}
+				title="Delete song"
+				description={
+					<div>
+						Are you sure you want to delete{" "}
+						<strong>{songNamePendingDeletion ?? "this song"}</strong>?
+					</div>
+				}
+				confirmLabel="Delete"
+				confirmColor="error"
+				onClose={handleCloseConfirm}
+				onConfirm={handleConfirmDelete}
+			/>
+		</>
 	);
 };
 
