@@ -50,7 +50,7 @@ const EditorInfoSection = ({
 			</ToggleButtonGroup>
 		</Box>
 		<Box className={styles.titleRow}>
-			<Typography variant="h4" component="h3" gutterBottom className={styles.title}>
+			<Typography variant="h4" component="h1" gutterBottom className={styles.title}>
 				{song?.name ?? "MIDI Editor"}
 			</Typography>
 			<FormControlLabel

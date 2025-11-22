@@ -16,7 +16,7 @@ const MidiEditorPage = () => {
 	const [song, setSong] = useState<Song | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("simple");
+	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
 	const [showSongInfo, setShowSongInfo] = useState(true);
 
 	async function fetchSong() {

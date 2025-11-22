@@ -35,11 +35,10 @@ const AdvancedMidiEditor = ({ song, loading, error = null }: Props) => {
 
 	return (
 		<Stack spacing={3}>
-			<Stack spacing={1}>
-				<Typography variant="body2" color="text.secondary">
-					Advanced MIDI editing capabilities will appear here.
-				</Typography>
-			</Stack>
+			<Typography variant="subtitle1">Advanced Editor</Typography>
+			<Typography variant="body2" color="text.secondary">
+				Advanced MIDI editing capabilities will appear here.
+			</Typography>
 		</Stack>
 	);
 };

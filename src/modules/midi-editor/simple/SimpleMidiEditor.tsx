@@ -7,9 +7,10 @@ import type { Song } from "../../../types/song.types";
 type Props = {
 	song: Song | null;
 	loading: boolean;
+	error?: string | null;
 };
 
-const SimpleMidiEditor = ({ song, loading }: Props) => {
+const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
 	if (loading) {
 		return (
 			<Stack spacing={2} alignItems="center" paddingY={4}>
@@ -18,6 +19,14 @@ const SimpleMidiEditor = ({ song, loading }: Props) => {
 					Loading song data...
 				</Typography>
 			</Stack>
+		);
+	}
+
+	if (error) {
+		return (
+			<Typography variant="body1" color="error">
+				{error}
+			</Typography>
 		);
 	}
 
