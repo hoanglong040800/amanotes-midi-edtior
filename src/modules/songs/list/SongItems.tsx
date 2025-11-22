@@ -10,7 +10,7 @@ type Props = {
 	songs: Song[];
 	onEditSong: (songId: number) => void;
 	onOpenEditor: (index: number) => void;
-	onDeleteRequest: (index: number) => void;
+	onDeleteRequest: (songId: number) => void;
 };
 
 const SongItems = ({ songs, onEditSong, onOpenEditor, onDeleteRequest }: Props) => (
@@ -22,7 +22,7 @@ const SongItems = ({ songs, onEditSong, onOpenEditor, onDeleteRequest }: Props) 
 						<EditOutlinedIcon fontSize="small" />
 					</IconButton>
 
-					<IconButton size="small" onClick={() => onDeleteRequest(idx)}>
+					<IconButton size="small" onClick={() => onDeleteRequest(song.id)}>
 						<DeleteOutlineIcon fontSize="small" />
 					</IconButton>
 				</div>

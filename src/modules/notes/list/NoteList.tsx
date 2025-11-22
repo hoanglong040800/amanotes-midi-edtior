@@ -15,7 +15,7 @@ const NoteList = ({ notes }: Props) => {
 	return (
 		<List disablePadding>
 			{notes.map((note) => (
-				<NoteItem key={`${note.track}-${note.time}-${note.title}`} note={note} />
+				<NoteItem key={note.id} note={note} />
 			))}
 		</List>
 	);

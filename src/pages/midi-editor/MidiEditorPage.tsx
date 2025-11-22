@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ChangeEvent, MouseEvent } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
@@ -12,40 +12,38 @@ import styles from "./MidiEditorPage.module.scss";
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
 	const { songId } = useParams<{ songId: string }>();
-	const { loadSong } = useSongs();
+	const { isLoading, loadSingleSong, onUpdateSong } = useSongs();
 	const [song, setSong] = useState<Song | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
+	const [loadError, setLoadError] = useState<string | null>(null);
+	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("simple");
 	const [showSongInfo, setShowSongInfo] = useState(true);
 
 	async function fetchSong() {
-		try {
-			const { song: foundSong, error: loadError } = await loadSong(songId);
+		setLoadError(null);
 
-			if (!foundSong && loadError) {
-				setError(loadError);
+		try {
+			const foundSong = await loadSingleSong(Number(songId));
+
+			if (!foundSong) {
+				setLoadError("Song not found");
 				setSong(null);
 				return;
 			}
 
 			setSong(foundSong);
-		} catch (error) {
+		} catch {
+			setLoadError("Unable to load song");
 			setSong(null);
-			setError(`Unable to load song`);
-		} finally {
-			setLoading(false);
 		}
 	}
 
-	useEffect(() => {
-		setLoading(true);
-
-		fetchSong();
-	}, [songId]);
-
 	const handleBack = () => {
 		navigate("/songs");
+	};
+
+	const handleSongUpdate = (updatedSong: Song) => {
+		setSong(updatedSong);
+		onUpdateSong(updatedSong.id, updatedSong);
 	};
 
 	const handleEditorModeChange = (
@@ -63,7 +61,46 @@ const MidiEditorPage = () => {
 		setShowSongInfo(checked);
 	};
 
-	const canShowSongInfo = Boolean(showSongInfo && !loading && !error && song);
+	// ---- EFFECTS ----
+
+	useEffect(() => {
+		fetchSong();
+	}, [songId]);
+
+	// ---- RENDER ----
+
+	const renderEditorContent = () => {
+		if (isLoading) {
+			return (
+				<Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+					<CircularProgress />
+				</Box>
+			);
+		}
+
+		if (loadError) {
+			return (
+				<Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+					<Typography color="error">{loadError}</Typography>
+				</Box>
+			);
+		}
+
+		if (editorMode === "simple") {
+			return (
+				<SimpleMidiEditor
+					song={song}
+					loading={isLoading}
+					error={loadError}
+					onSongUpdate={handleSongUpdate}
+				/>
+			);
+		}
+
+		return <AdvancedMidiEditor song={song} loading={isLoading} error={loadError} />;
+	};
+
+	const canShowSongInfo = Boolean(showSongInfo && !isLoading && !loadError && song);
 
 	return (
 		<Box className={styles.editor}>
@@ -76,13 +113,7 @@ const MidiEditorPage = () => {
 				onEditorModeChange={handleEditorModeChange}
 				onSongInfoToggle={handleSongInfoToggle}
 			/>
-			<Box className={styles.editorCard}>
-				{editorMode === "simple" ? (
-					<SimpleMidiEditor song={song} loading={loading} error={error} />
-				) : (
-					<AdvancedMidiEditor song={song} loading={loading} error={error} />
-				)}
-			</Box>
+			<Box className={styles.editorCard}>{renderEditorContent()}</Box>
 		</Box>
 	);
 };

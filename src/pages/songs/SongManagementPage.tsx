@@ -8,7 +8,9 @@ import SongActionPopup from "../../modules/songs/action-popup/SongActionPopup";
 import styles from "./SongManagementPage.module.scss";
 
 const SongListPage = () => {
-	const { songs, loading, loadSongs, onCreateSong, onUpdateSong, onDeleteSong } = useSongs();
+	const [songs, setSongs] = useState<Song[]>([]);
+	const { isLoading, loadMultiSongs, onCreateSong, onUpdateSong, onDeleteSong, onOpenEditor } =
+		useSongs();
 	const [isPopupOpen, setPopupOpen] = useState(false);
 	const [actionMode, setActionMode] = useState<"create" | "edit">("create");
 	const [inEditSongId, setInEditSongId] = useState<number | null>(null);
@@ -33,14 +35,26 @@ const SongListPage = () => {
 
 	const handleSubmitSong = (song: Song) => {
 		if (actionMode === "edit" && inEditSongId !== null) {
-			onUpdateSong(inEditSongId, song);
+			const updatedSongs = onUpdateSong(inEditSongId, song);
+			setSongs(updatedSongs);
 		} else {
-			onCreateSong(song);
+			const updatedSongs = onCreateSong(song);
+			setSongs(updatedSongs);
 		}
 	};
 
+	const handleDeleteSong = (songId: number) => {
+		const updatedSongs = onDeleteSong(songId);
+		setSongs(updatedSongs);
+	};
+
+	async function fetchSongs() {
+		const fetchedSongs = await loadMultiSongs();
+		setSongs(fetchedSongs);
+	}
+
 	useEffect(() => {
-		loadSongs();
+		fetchSongs();
 	}, []);
 
 	return (
@@ -49,9 +63,10 @@ const SongListPage = () => {
 				<SongListHeader onAddClick={handleAddClick} />
 				<SongList
 					songs={songs}
-					loading={loading}
-					onDeleteSong={onDeleteSong}
+					loading={isLoading}
+					onDeleteSong={handleDeleteSong}
 					onEditSong={handleEditSong}
+					onOpenEditorPage={onOpenEditor}
 				/>
 			</Container>
 

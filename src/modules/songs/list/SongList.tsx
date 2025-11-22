@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Song } from "../../../types/song.types";
 import ConfirmDialog from "../../../components/confirm-dialog/ConfirmDialog";
 import SongItems from "./SongItems";
@@ -7,24 +6,21 @@ import SongItems from "./SongItems";
 type Props = {
 	songs: Song[];
 	loading?: boolean;
-	onDeleteSong: (index: number) => void;
+	onOpenEditorPage: (index: number) => void;
+	onDeleteSong: (songId: number) => void;
 	onEditSong: (songId: number) => void;
 };
 
-const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) => {
-	const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
-	const navigate = useNavigate();
-	const handleOpenEditor = (index: number) => {
-		navigate(`/songs/${index}/editor`);
-	};
+const SongList = ({ songs, loading = false, onDeleteSong, onEditSong, onOpenEditorPage }: Props) => {
+	const [pendingDeleteSongId, setPendingDeleteSongId] = useState<number | null>(null);
 
-	const handleOpenConfirm = (index: number) => setPendingDeleteIndex(index);
-	const handleCloseConfirm = () => setPendingDeleteIndex(null);
+	const handleOpenConfirm = (songId: number) => setPendingDeleteSongId(songId);
+	const handleCloseConfirm = () => setPendingDeleteSongId(null);
 	const handleConfirmDelete = () => {
-		if (pendingDeleteIndex === null) return;
+		if (pendingDeleteSongId === null) return;
 
-		onDeleteSong(pendingDeleteIndex);
-		setPendingDeleteIndex(null);
+		onDeleteSong(pendingDeleteSongId);
+		setPendingDeleteSongId(null);
 	};
 
 	if (loading) {
@@ -32,19 +28,19 @@ const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) =
 	}
 
 	const songNamePendingDeletion =
-		pendingDeleteIndex !== null ? songs[pendingDeleteIndex]?.name : undefined;
+		pendingDeleteSongId !== null ? songs.find((song) => song.id === pendingDeleteSongId)?.name : undefined;
 
 	return (
 		<>
 			<SongItems
 				songs={songs}
 				onEditSong={onEditSong}
-				onOpenEditor={handleOpenEditor}
+				onOpenEditor={onOpenEditorPage}
 				onDeleteRequest={handleOpenConfirm}
 			/>
 
 			<ConfirmDialog
-				open={pendingDeleteIndex !== null}
+				open={pendingDeleteSongId !== null}
 				title="Delete song"
 				description={
 					<div>

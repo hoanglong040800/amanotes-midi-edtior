@@ -1,17 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Song } from "../types/song.types";
 import { StorageKey } from "../enums/common.enum";
 
 const SAMPLE_SONGS_URL = "/src/data/sample-songs.json";
 
-export type LoadSingleSongResult = {
-	song: Song | null;
-	error: string | null;
-};
-
 export function useSongs() {
-	const [songs, setSongs] = useState<Song[]>([]);
-	const [loading, setLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const navigate = useNavigate();
 
 	async function fetchSongsFromSource(): Promise<Song[]> {
 		const response = await fetch(SAMPLE_SONGS_URL);
@@ -34,90 +30,103 @@ export function useSongs() {
 		return fetchSongsFromSource();
 	}
 
-	async function loadSong(songId?: string): Promise<LoadSingleSongResult> {
-		if (songId === undefined) {
-			return { song: null, error: "Missing song identifier." };
-		}
+	function getSongsFromStorage(): Song[] {
+		const cached = localStorage.getItem(StorageKey.CACHED_SONGS);
+		return cached ? (JSON.parse(cached) as Song[]) : [];
+	}
 
-		const index = Number(songId);
+	function saveSongsToStorage(songs: Song[]): void {
+		localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(songs));
+	}
 
-		if (Number.isNaN(index) || index < 0) {
-			return { song: null, error: "Invalid song identifier." };
+	async function loadSingleSong(index: number): Promise<Song | null> {
+		setIsLoading(true);
+
+		if (index === undefined) {
+			return null;
 		}
 
 		try {
+			if (Number.isNaN(index) || index < 0) {
+				return null;
+			}
+
 			const allSongs = await getSongs();
-			const song = allSongs[index] ?? null;
-			return song ? { song, error: null } : { song: null, error: "Song not found." };
+			return allSongs[index] ?? null;
 		} catch {
-			return { song: null, error: "Unable to load song." };
+			return null;
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
-	async function loadSongs() {
-		setLoading(true);
+	async function loadMultiSongs(): Promise<Song[]> {
+		setIsLoading(true);
 
 		try {
 			const data = await getSongs();
-			setSongs(data);
+			return data;
 		} catch {
-			setSongs([]);
+			return [];
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	}
 
-	function onCreateSong(song: Song) {
-		setSongs((prevSongs) => {
-			const nextId =
-				song.id ??
-				(prevSongs.length > 0
-					? Math.max(...prevSongs.map((existingSong) => existingSong.id ?? 0)) + 1
-					: 1);
-			const songWithId: Song = { ...song, id: nextId };
-			const updatedSongs = [...prevSongs, songWithId];
-			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
-			return updatedSongs;
-		});
+	function generateSongId(): number {
+		return Date.now() + Math.floor(Math.random() * 1000);
 	}
 
-	function onUpdateSong(songId: number, song: Song) {
-		setSongs((prevSongs) => {
-			const index = prevSongs.findIndex((existingSong) => existingSong.id === songId);
+	function onCreateSong(song: Song): Song[] {
+		const currentSongs = getSongsFromStorage();
+		const songId = song.id ?? generateSongId();
+		const songWithId: Song = { ...song, id: songId };
+		const updatedSongs = [...currentSongs, songWithId];
 
-			if (index === -1) {
-				return prevSongs;
-			}
-
-			const updatedSongs = [...prevSongs];
-			const existingSong = prevSongs[index];
-
-			updatedSongs[index] = {
-				...existingSong,
-				...song,
-				id: existingSong.id,
-			};
-
-			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
-			return updatedSongs;
-		});
+		saveSongsToStorage(updatedSongs);
+		return updatedSongs;
 	}
 
-	function onDeleteSong(index: number) {
-		setSongs((prevSongs) => {
-			const updatedSongs = prevSongs.filter((_, songIndex) => songIndex !== index);
-			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
-			return updatedSongs;
-		});
+	function onUpdateSong(songId: number, song: Song): Song[] {
+		const currentSongs = getSongsFromStorage();
+		const index = currentSongs.findIndex((existingSong) => existingSong.id === songId);
+
+		if (index === -1) {
+			return currentSongs;
+		}
+
+		const updatedSongs = [...currentSongs];
+		const existingSong = currentSongs[index];
+
+		updatedSongs[index] = {
+			...existingSong,
+			...song,
+			id: existingSong.id,
+		};
+
+		saveSongsToStorage(updatedSongs);
+		return updatedSongs;
+	}
+
+	function onDeleteSong(songId: number): Song[] {
+		const currentSongs = getSongsFromStorage();
+		const updatedSongs = currentSongs.filter((song) => song.id !== songId);
+
+		saveSongsToStorage(updatedSongs);
+		return updatedSongs;
+	}
+
+	function onOpenEditor(index: number) {
+		navigate(`/songs/${index}/editor`);
 	}
 
 	return {
-		songs,
-		loading,
-		loadSongs,
-		loadSong,
+		isLoading,
+		loadMultiSongs,
+		loadSingleSong,
 		onCreateSong,
 		onUpdateSong,
 		onDeleteSong,
+		onOpenEditor,
 	};
 }
