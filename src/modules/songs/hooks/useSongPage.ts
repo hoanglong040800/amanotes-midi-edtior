@@ -26,9 +26,28 @@ export function useSongPage() {
 		}
 	}
 
-	function onCallbackSubmit(song: Song) {
+	function onCreateSong(song: Song) {
 		setSongs((prevSongs) => {
 			const updatedSongs = [...prevSongs, song];
+			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
+			return updatedSongs;
+		});
+	}
+
+	function onUpdateSong(index: number, song: Song) {
+		setSongs((prevSongs) => {
+			if (index < 0 || index >= prevSongs.length) {
+				return prevSongs;
+			}
+
+			const updatedSongs = [...prevSongs];
+			const existingSong = prevSongs[index];
+
+			updatedSongs[index] = {
+				...existingSong,
+				...song,
+			};
+
 			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(updatedSongs));
 			return updatedSongs;
 		});
@@ -46,5 +65,5 @@ export function useSongPage() {
 		loadSongs();
 	}, []);
 
-	return { songs, loading, onCallbackSubmit, onDeleteSong };
+	return { songs, loading, onCreateSong, onUpdateSong, onDeleteSong };
 }

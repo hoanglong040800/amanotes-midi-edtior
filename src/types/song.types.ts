@@ -1,17 +1,22 @@
+import { TrackType } from "../enums/track.enum";
+
 export type Note = {
-	track: number;
+	track: number; // from 1 - 8
 	time: number;
 	title: string;
 	description?: string;
 	color: string;
+	createdAt: Date;
+	updatedAt: Date;
 };
-
-export type TrackType = "Kick" | "Snare" | "Hi-Hat" | "Crash" | "Ride" | "Tom 1" | "Tom 2" | "Tambourine" | "Pad" | "Arp" | "FX";
 
 export type Song = {
 	name: string;
 	description: string;
-	totalDuration: number;
+	totalDuration: number; // in seconds
 	trackLabels: TrackType[];
 	notes: Note[];
+	tags: string[];
+	createdAt: Date;
+	updatedAt: Date;
 };

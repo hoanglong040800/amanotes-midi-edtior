@@ -11,10 +11,13 @@
 		padding-right: 48px;
 	}
 
-	.delete {
+	.actions {
 		position: absolute;
 		top: 12px;
 		right: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
 	}
 }
 

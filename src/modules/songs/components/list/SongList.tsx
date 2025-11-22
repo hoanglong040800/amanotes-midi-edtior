@@ -1,6 +1,7 @@
 import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import IconButton from "@mui/material/IconButton";
 import "./SongList.scss";
 import SongCard from "../card/SongCard";
 import SongMetadata from "../metadata/SongMetadata";
@@ -11,9 +12,10 @@ type Props = {
 	songs: Song[];
 	loading?: boolean;
 	onDeleteSong: (index: number) => void;
+	onEditSong: (index: number) => void;
 };
 
-const SongList = ({ songs, loading = false, onDeleteSong }: Props) => {
+const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) => {
 	const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
 
 	const handleOpenConfirm = (index: number) => setPendingDeleteIndex(index);
@@ -37,12 +39,12 @@ const SongList = ({ songs, loading = false, onDeleteSong }: Props) => {
 			<div className="song-list">
 				{songs.map((song, idx) => (
 					<div key={`${song.name}-${idx}`} className="item">
-						<div className="delete">
-							<IconButton
-								aria-label={`Delete ${song.name}`}
-								size="small"
-								onClick={() => handleOpenConfirm(idx)}
-							>
+						<div className="actions">
+							<IconButton size="small" onClick={() => onEditSong(idx)}>
+								<EditOutlinedIcon fontSize="small" />
+							</IconButton>
+
+							<IconButton size="small" onClick={() => handleOpenConfirm(idx)}>
 								<DeleteOutlineIcon fontSize="small" />
 							</IconButton>
 						</div>
@@ -71,4 +73,3 @@ const SongList = ({ songs, loading = false, onDeleteSong }: Props) => {
 };
 
 export default SongList;
-

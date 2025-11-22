@@ -1,4 +1,4 @@
-export enum TrackLabel {
+export enum TrackType {
 	Kick = "Kick",
 	Snare = "Snare",
 	HiHat = "Hi-Hat",
