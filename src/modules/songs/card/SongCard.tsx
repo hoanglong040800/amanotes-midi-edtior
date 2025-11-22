@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import "./SongCard.scss";
-import type { Song } from "../../../../types/song.types";
+import type { Song } from "../../../types/song.types";
 
 type Props = {
 	song: Song;

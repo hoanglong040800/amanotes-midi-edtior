@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "./SongList.scss";
 import SongCard from "../card/SongCard";
 import SongMetadata from "../metadata/SongMetadata";
-import type { Song } from "../../../../types/song.types";
-import ConfirmDialog from "../../../../components/confirm-dialog/ConfirmDialog";
+import type { Song } from "../../../types/song.types";
+import ConfirmDialog from "../../../components/confirm-dialog/ConfirmDialog";
 
 type Props = {
 	songs: Song[];

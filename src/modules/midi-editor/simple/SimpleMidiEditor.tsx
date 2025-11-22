@@ -2,9 +2,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import NoteList from "../../../notes/list/NoteList";
-import SongInfo from "../../../songs/components/info/SongInfo";
-import type { Song } from "../../../../types/song.types";
+import NoteList from "../../notes/list/NoteList";
+import SongInfo from "../../songs/info/SongInfo";
+import type { Song } from "../../../types/song.types";
 
 type Props = {
 	song: Song | null;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import SimpleMidiEditor from "../../modules/midi-editor/components/simple/SimpleMidiEditor";
+import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import { loadSingleSong } from "../../hooks/useSongs";
 import type { Song } from "../../types/song.types";
 import styles from "./MidiEditorPage.module.scss";

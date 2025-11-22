@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { useSongs } from "../../hooks/useSongs";
 import type { Song } from "../../types/song.types";
-import SongListHeader from "../../modules/songs/components/list-header/SongListHeader";
-import SongList from "../../modules/songs/components/list/SongList";
-import SongActionPopup from "../../modules/songs/components/action-popup/SongActionPopup";
+import SongListHeader from "../../modules/songs/list-header/SongListHeader";
+import SongList from "../../modules/songs/list/SongList";
+import SongActionPopup from "../../modules/songs/action-popup/SongActionPopup";
 import styles from "./SongManagementPage.module.scss";
 
 const SongListPage = () => {

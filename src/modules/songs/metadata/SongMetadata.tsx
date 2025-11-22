@@ -1,7 +1,7 @@
 import "./SongMetadata.scss";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { Song } from "../../../../types/song.types";
+import type { Song } from "../../../types/song.types";
 
 export type Props = {
 	song: Song;

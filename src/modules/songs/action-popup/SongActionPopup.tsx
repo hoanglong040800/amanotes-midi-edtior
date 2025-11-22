@@ -7,9 +7,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormProvider } from "react-hook-form";
-import type { Song } from "../../../../types/song.types";
-import { useSongActionPopup } from "../../hooks/useSongActionPopup";
-import MultiSelect from "../../../../components/inputs/multi-select/MultiSelect";
+import type { Song } from "../../../types/song.types";
+import { useSongActionPopup } from "../_hooks/useSongActionPopup";
+import MultiSelect from "../../../components/inputs/multi-select/MultiSelect";
 
 type Props = {
 	isOpen: boolean;
@@ -33,7 +33,7 @@ const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit 
 	} = form;
 
 	return (
-		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
+		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
 			<FormProvider {...form}>
 				<form className="form" onSubmit={handleSubmit} noValidate>
 					<DialogTitle>{mode === "edit" ? "Edit Song" : "Create Song"}</DialogTitle>
