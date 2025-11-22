@@ -9,12 +9,9 @@ type Props = {
 
 const SongInfo = ({ song }: Props) => (
 	<Stack spacing={3}>
-		<Stack spacing={1}>
-			<Typography variant="h5">{song.name}</Typography>
-			<Typography variant="body2" color="text.secondary">
-				{song.description || "No description provided."}
-			</Typography>
-		</Stack>
+		<Typography variant="body2" color="text.secondary">
+			{song.description || "No description provided."}
+		</Typography>
 
 		<SongMetadata song={song} />
 	</Stack>

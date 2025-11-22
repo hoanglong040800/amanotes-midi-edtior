@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { TrackType } from "../../../enums/track.enum";
 import type { Song } from "../../../types/song.types";
+import { TRACK_LABEL_OPTIONS } from "../_utils/song.utils";
+import { SONG_FORM_SCHEMA } from "../_validation/song.validation";
 
 type UseSongActionPopupParams = {
 	onClose: () => void;
@@ -18,38 +19,6 @@ type SongActionFormValues = {
 	totalDuration: number;
 	trackLabels: TrackType[];
 };
-
-const buildTrackLabelOptions = () => {
-	const options: TrackType[] = [];
-
-	for (const key in TrackType) {
-		options.push(TrackType[key as keyof typeof TrackType]);
-	}
-
-	return options;
-};
-
-const TRACK_LABEL_OPTIONS = buildTrackLabelOptions();
-
-const NUMBER_TRANSFORM = (value: unknown, originalValue: unknown) => {
-	if (typeof originalValue === "string" && originalValue.trim() === "") {
-		return undefined;
-	}
-
-	return Number.isNaN(value) ? undefined : value;
-};
-
-const SONG_FORM_SCHEMA = yup.object({
-	name: yup.string().trim().required("Name is required"),
-	description: yup.string().trim().required("Description is required"),
-	totalDuration: yup
-		.number()
-		.transform(NUMBER_TRANSFORM)
-		.typeError("Duration is required")
-		.min(0, "Duration must be 0 or greater")
-		.required("Duration is required"),
-	trackLabels: yup.array().of(yup.mixed<TrackType>().oneOf(TRACK_LABEL_OPTIONS)).default([]),
-});
 
 const DEFAULT_VALUES: SongActionFormValues = {
 	name: "",
@@ -71,19 +40,6 @@ export function useSongActionPopup({
 
 	const { handleSubmit, reset } = form;
 
-	useEffect(() => {
-		if (mode === "edit" && initialSong) {
-			reset({
-				name: initialSong.name ?? "",
-				description: initialSong.description ?? "",
-				totalDuration: initialSong.totalDuration ?? 0,
-				trackLabels: initialSong.trackLabels ?? [],
-			});
-		} else if (mode === "create") {
-			reset(DEFAULT_VALUES);
-		}
-	}, [initialSong, mode, reset]);
-
 	const trackLabelOptions = TRACK_LABEL_OPTIONS;
 
 	const submitForm = handleSubmit((values) => {
@@ -102,6 +58,7 @@ export function useSongActionPopup({
 			onCallbackSubmit(updatedSong);
 		} else {
 			const newSong: Song = {
+				id: Date.now(),
 				name: values.name.trim(),
 				description: values.description.trim(),
 				trackLabels: values.trackLabels ?? [],
@@ -118,6 +75,21 @@ export function useSongActionPopup({
 		reset(DEFAULT_VALUES);
 		onClose();
 	});
+
+	// ---- EFFECTS ----
+
+	useEffect(() => {
+		if (mode === "edit" && initialSong) {
+			reset({
+				name: initialSong.name ?? "",
+				description: initialSong.description ?? "",
+				totalDuration: initialSong.totalDuration ?? 0,
+				trackLabels: initialSong.trackLabels ?? [],
+			});
+		} else if (mode === "create") {
+			reset(DEFAULT_VALUES);
+		}
+	}, [initialSong, mode, reset]);
 
 	return {
 		form,

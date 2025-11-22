@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { Box, Button, Typography } from "@mui/material";
+import type { ChangeEvent, MouseEvent } from "react";
+import { Box } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
-import { loadSingleSong } from "../../hooks/useSongs";
+import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
+import { useSongs } from "../../hooks/useSongs";
 import type { Song } from "../../types/song.types";
+import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
 import styles from "./MidiEditorPage.module.scss";
 
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
 	const { songId } = useParams<{ songId: string }>();
+	const { loadSong } = useSongs();
 	const [song, setSong] = useState<Song | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("simple");
+	const [showSongInfo, setShowSongInfo] = useState(true);
 
 	async function fetchSong() {
 		try {
-			const { song: foundSong, error: loadError } = await loadSingleSong(songId);
+			const { song: foundSong, error: loadError } = await loadSong(songId);
 
 			if (!foundSong && loadError) {
 				setError(loadError);
@@ -43,20 +48,41 @@ const MidiEditorPage = () => {
 		navigate("/songs");
 	};
 
+	const handleEditorModeChange = (
+		_: MouseEvent<HTMLElement>,
+		nextMode: "simple" | "advanced" | null
+	) => {
+		if (!nextMode) {
+			return;
+		}
+
+		setEditorMode(nextMode);
+	};
+
+	const handleSongInfoToggle = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+		setShowSongInfo(checked);
+	};
+
+	const canShowSongInfo = Boolean(showSongInfo && !loading && !error && song);
+
 	return (
 		<Box className={styles.editor}>
-			<Button
-				variant="text"
-				onClick={handleBack}
-				className={styles.backButton}
-				startIcon={<ArrowBackIosNewIcon fontSize="small" />}
-			>
-				Back to songs
-			</Button>
-			<Typography variant="h4" component="h1" gutterBottom className={styles.title}>
-				MIDI Editor
-			</Typography>
-			<SimpleMidiEditor song={song} loading={loading} error={error} />
+			<EditorInfoSection
+				song={song}
+				editorMode={editorMode}
+				showSongInfo={showSongInfo}
+				showMetadata={canShowSongInfo}
+				onBack={handleBack}
+				onEditorModeChange={handleEditorModeChange}
+				onSongInfoToggle={handleSongInfoToggle}
+			/>
+			<Box className={styles.editorCard}>
+				{editorMode === "simple" ? (
+					<SimpleMidiEditor song={song} loading={loading} error={error} />
+				) : (
+					<AdvancedMidiEditor song={song} loading={loading} error={error} />
+				)}
+			</Box>
 		</Box>
 	);
 };

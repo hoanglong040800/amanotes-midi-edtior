@@ -10,38 +10,38 @@ import styles from "./SongManagementPage.module.scss";
 const SongListPage = () => {
 	const { songs, loading, loadSongs, onCreateSong, onUpdateSong, onDeleteSong } = useSongs();
 	const [isPopupOpen, setPopupOpen] = useState(false);
-	const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
-	useEffect(() => {
-		void loadSongs();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const [actionMode, setActionMode] = useState<"create" | "edit">("create");
+	const [inEditSongId, setInEditSongId] = useState<number | null>(null);
 
 	const handleAddClick = () => {
-		setEditingIndex(null);
+		setActionMode("create");
+		setInEditSongId(null);
 		setPopupOpen(true);
 	};
 
-	const handleEditSong = (index: number) => {
-		setEditingIndex(index);
+	const handleEditSong = (id: number) => {
+		setActionMode("edit");
+		setInEditSongId(id);
 		setPopupOpen(true);
 	};
 
 	const handleClosePopup = () => {
 		setPopupOpen(false);
-		setEditingIndex(null);
+		setInEditSongId(null);
+		setActionMode("create");
 	};
 
 	const handleSubmitSong = (song: Song) => {
-		if (editingIndex !== null) {
-			onUpdateSong(editingIndex, song);
+		if (actionMode === "edit" && inEditSongId !== null) {
+			onUpdateSong(inEditSongId, song);
 		} else {
 			onCreateSong(song);
 		}
 	};
 
-	const popupMode = editingIndex !== null ? "edit" : "create";
-	const editingSong = editingIndex !== null ? songs[editingIndex] : undefined;
+	useEffect(() => {
+		loadSongs();
+	}, []);
 
 	return (
 		<>
@@ -57,8 +57,8 @@ const SongListPage = () => {
 
 			<SongActionPopup
 				isOpen={isPopupOpen}
-				mode={popupMode}
-				initialSong={editingSong}
+				mode={actionMode}
+				initialSong={songs.find((song) => song.id === inEditSongId)}
 				onClose={handleClosePopup}
 				onCallbackSubmit={handleSubmitSong}
 			/>

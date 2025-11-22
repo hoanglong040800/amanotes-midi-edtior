@@ -1,26 +1,16 @@
 .editor {
-	background: #fff;
-	border-radius: 12px;
-	padding: 48px;
-	margin: 32px auto;
-	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-	max-width: 900px;
-	min-height: 400px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+	width: 100%;
+}
+
+.editorCard {
 	border: 1px solid #e5e7eb;
-
-	.title {
-		color: #3b82f6;
-		font-size: 1.5rem;
-		font-weight: 700;
-	}
-
-	.backButton {
-		margin-bottom: 24px;
-
-		:global(.MuiButton-startIcon) {
-			margin-right: 12px;
-		}
-	}
+	border-radius: 8px;
+	background: #fff;
+	padding: 20px 24px;
 }
 
 .desc {
@@ -28,4 +18,3 @@
 	color: #6b7280;
 	font-size: 1rem;
 }
-

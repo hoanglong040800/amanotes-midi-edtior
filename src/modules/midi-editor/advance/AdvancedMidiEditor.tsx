@@ -1,23 +1,31 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import NoteList from "../../notes/list/NoteList";
 import type { Song } from "../../../types/song.types";
 
 type Props = {
 	song: Song | null;
 	loading: boolean;
+	error?: string | null;
 };
 
-const SimpleMidiEditor = ({ song, loading }: Props) => {
+const AdvancedMidiEditor = ({ song, loading, error = null }: Props) => {
 	if (loading) {
 		return (
 			<Stack spacing={2} alignItems="center" paddingY={4}>
 				<CircularProgress />
 				<Typography variant="body2" color="text.secondary">
-					Loading song data...
+					Preparing advanced tools...
 				</Typography>
 			</Stack>
+		);
+	}
+
+	if (error) {
+		return (
+			<Typography variant="body1" color="error">
+				{error}
+			</Typography>
 		);
 	}
 
@@ -28,10 +36,12 @@ const SimpleMidiEditor = ({ song, loading }: Props) => {
 	return (
 		<Stack spacing={3}>
 			<Stack spacing={1}>
-				<NoteList notes={song.notes} />
+				<Typography variant="body2" color="text.secondary">
+					Advanced MIDI editing capabilities will appear here.
+				</Typography>
 			</Stack>
 		</Stack>
 	);
 };
 
-export default SimpleMidiEditor;
+export default AdvancedMidiEditor;

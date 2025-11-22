@@ -1,19 +1,14 @@
 import { useState } from "react";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import "./SongList.scss";
-import SongCard from "../card/SongCard";
-import SongMetadata from "../metadata/SongMetadata";
 import type { Song } from "../../../types/song.types";
 import ConfirmDialog from "../../../components/confirm-dialog/ConfirmDialog";
+import SongItems from "./SongItems";
 
 type Props = {
 	songs: Song[];
 	loading?: boolean;
 	onDeleteSong: (index: number) => void;
-	onEditSong: (index: number) => void;
+	onEditSong: (songId: number) => void;
 };
 
 const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) => {
@@ -41,23 +36,12 @@ const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) =
 
 	return (
 		<>
-			<div className="song-list">
-				{songs.map((song, idx) => (
-					<div key={`${song.name}-${idx}`} className="item">
-						<div className="actions">
-							<IconButton size="small" onClick={() => onEditSong(idx)}>
-								<EditOutlinedIcon fontSize="small" />
-							</IconButton>
-
-							<IconButton size="small" onClick={() => handleOpenConfirm(idx)}>
-								<DeleteOutlineIcon fontSize="small" />
-							</IconButton>
-						</div>
-						<SongCard song={song} onOpenEditor={() => handleOpenEditor(idx)} />
-						<SongMetadata song={song} />
-					</div>
-				))}
-			</div>
+			<SongItems
+				songs={songs}
+				onEditSong={onEditSong}
+				onOpenEditor={handleOpenEditor}
+				onDeleteRequest={handleOpenConfirm}
+			/>
 
 			<ConfirmDialog
 				open={pendingDeleteIndex !== null}
