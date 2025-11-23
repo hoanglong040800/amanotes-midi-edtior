@@ -3,7 +3,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import IconButton from "@mui/material/IconButton";
 import SongCard from "../card/SongCard";
 import SongMetadata from "../metadata/SongMetadata";
-import type { Song } from "../../../types/song.types";
+import type { Song } from "../../../api/types/song.types";
 import styles from "./SongItems.module.scss";
 
 type Props = {

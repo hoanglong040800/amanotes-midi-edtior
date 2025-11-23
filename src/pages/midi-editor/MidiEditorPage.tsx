@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
 import { useSongs } from "../../hooks/useSongs";
-import type { Song } from "../../types/song.types";
+import type { Song } from "../../api/types/song.types";
 import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
 import styles from "./MidiEditorPage.module.scss";
 

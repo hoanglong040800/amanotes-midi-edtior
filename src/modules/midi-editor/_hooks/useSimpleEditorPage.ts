@@ -1,6 +1,7 @@
 import { useState } from "react";
-import type { Note, Song } from "../../../../types/song.types";
-import { useNotes, type CreateNoteInput } from "../../../../hooks/useNotes";
+import type { Note, Song } from "../../../api/types/song.types";
+import type { CreateNoteInput } from "../../../api/dto/songs.dto";
+import { useNotes } from "../../../hooks/useNotes";
 
 type UseSimpleEditorPageParams = {
 	song: Song | null;

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TrackType } from "../../../enums/track.enum";
-import type { Song } from "../../../types/song.types";
+import { TrackType } from "../../../api/enums/track.enum";
+import type { Song } from "../../../api/types/song.types";
 import { TRACK_LABEL_OPTIONS } from "../_utils/song.utils";
 import { SONG_FORM_SCHEMA } from "../_validation/song.validation";
 

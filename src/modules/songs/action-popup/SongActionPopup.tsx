@@ -1,4 +1,3 @@
-import "./SongActionPopup.scss";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -7,9 +6,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormProvider } from "react-hook-form";
-import type { Song } from "../../../types/song.types";
+import type { Song } from "../../../api/types/song.types";
 import { useSongActionPopup } from "../_hooks/useSongActionPopup";
 import MultiSelect from "../../../components/inputs/multi-select/MultiSelect";
+import styles from "./SongActionPopup.module.scss";
 
 type Props = {
 	isOpen: boolean;
@@ -35,11 +35,11 @@ const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit 
 	return (
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
 			<FormProvider {...form}>
-				<form className="form" onSubmit={handleSubmit} noValidate>
+				<form className={styles.form} onSubmit={handleSubmit} noValidate>
 					<DialogTitle>{mode === "edit" ? "Edit Song" : "Create Song"}</DialogTitle>
 
 					{/* override default pt 0 */}
-					<DialogContent className="content" sx={{ pt: 2 }}>
+					<DialogContent className={styles.content} sx={{ pt: 2 }}>
 						<TextField
 							label="Name"
 							placeholder="Rock Beat"
@@ -80,7 +80,7 @@ const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit 
 						<MultiSelect name="trackLabels" label="Track Labels" options={trackLabelOptions} />
 					</DialogContent>
 
-					<DialogActions className="actions">
+					<DialogActions className={styles.actions}>
 						<Button onClick={onClose}>Cancel</Button>
 						<Button type="submit" variant="contained" disabled={isSubmitting}>
 							Save

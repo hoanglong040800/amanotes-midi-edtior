@@ -1,14 +1,14 @@
-import "./SongMetadata.scss";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { Song } from "../../../types/song.types";
+import type { Song } from "../../../api/types/song.types";
+import styles from "./SongMetadata.module.scss";
 
 export type Props = {
 	song: Song;
 };
 
 const SongMetadata = ({ song }: Props) => (
-	<Stack direction="row" spacing={3} className="metadata">
+	<Stack direction="row" spacing={3} className={styles.metadata}>
 		<Typography variant="caption">Duration: {song.totalDuration}s</Typography>
 		<Typography variant="caption">
 			Track Labels: {song.trackLabels.slice(0, 3).join(", ")}

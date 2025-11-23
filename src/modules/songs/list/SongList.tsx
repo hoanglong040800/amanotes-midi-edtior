@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Song } from "../../../types/song.types";
+import type { Song } from "../../../api/types/song.types";
 import ConfirmDialog from "../../../components/confirm-dialog/ConfirmDialog";
 import SongItems from "./SongItems";
 

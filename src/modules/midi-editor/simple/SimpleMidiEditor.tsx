@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import NoteList from "../../notes/list/NoteList";
 import NoteActionPopup from "../../notes/action-popup/NoteActionPopup";
-import type { Song } from "../../../types/song.types";
-import { useSimpleEditorPage } from "./_hooks/useSimpleEditorPage";
+import type { Song } from "../../../api/types/song.types";
+import { useSimpleEditorPage } from "../_hooks/useSimpleEditorPage";
 
 type Props = {
 	song: Song | null;

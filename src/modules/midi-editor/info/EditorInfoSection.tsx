@@ -2,7 +2,7 @@ import type { ChangeEvent, MouseEvent } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { Box, Button, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import SongInfo from "../../songs/info/SongInfo";
-import type { Song } from "../../../types/song.types";
+import type { Song } from "../../../api/types/song.types";
 import styles from "./EditorInfoSection.module.scss";
 
 type Props = {

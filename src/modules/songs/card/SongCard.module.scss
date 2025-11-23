@@ -1,0 +1,38 @@
+.card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+
+    .action {
+        display: block;
+
+        &.Mui-disabled {
+            cursor: default;
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-right: 12px;
+    }
+
+    .text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .title {
+        font-weight: 600;
+    }
+
+    .openEditor {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+

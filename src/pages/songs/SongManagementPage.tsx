@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { useSongs } from "../../hooks/useSongs";
-import type { Song } from "../../types/song.types";
+import type { Song } from "../../api/types/song.types";
 import SongListHeader from "../../modules/songs/list-header/SongListHeader";
 import SongList from "../../modules/songs/list/SongList";
 import SongActionPopup from "../../modules/songs/action-popup/SongActionPopup";

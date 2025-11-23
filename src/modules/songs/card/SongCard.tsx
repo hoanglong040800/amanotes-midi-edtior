@@ -3,8 +3,8 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import "./SongCard.scss";
-import type { Song } from "../../../types/song.types";
+import styles from "./SongCard.module.scss";
+import type { Song } from "../../../api/types/song.types";
 
 type Props = {
 	song: Song;
@@ -21,16 +21,16 @@ const SongCard = ({ song, onOpenEditor }: Props) => {
 	};
 
 	return (
-		<Card className="card" variant="outlined">
+		<Card className={styles.card} variant="outlined">
 			<CardActionArea
-				className="action"
+				className={styles.action}
 				onClick={handleOpenEditor}
 				disabled={!onOpenEditor}
 				aria-label={onOpenEditor ? "Open MIDI editor" : undefined}
 			>
-				<CardContent className="content">
-					<div className="text">
-						<Typography variant="h6" className="title">
+				<CardContent className={styles.content}>
+					<div className={styles.text}>
+						<Typography variant="h6" className={styles.title}>
 							{song.name}
 						</Typography>
 						<Typography variant="body2" color="text.secondary">
@@ -39,7 +39,7 @@ const SongCard = ({ song, onOpenEditor }: Props) => {
 					</div>
 
 					{onOpenEditor ? (
-						<div className="open-editor" aria-hidden>
+						<div className={styles.openEditor} aria-hidden>
 							<ChevronRightIcon fontSize="small" />
 						</div>
 					) : null}

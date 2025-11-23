@@ -1,6 +1,6 @@
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import type { Note } from "../../../types/song.types";
+import type { Note } from "../../../api/types/song.types";
 import NoteItem from "../item/NoteItem";
 
 type Props = {

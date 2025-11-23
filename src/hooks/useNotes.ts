@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import type { Note, Song } from "../types/song.types";
-import { StorageKey } from "../enums/common.enum";
+import type { Note, Song } from "../api/types/song.types";
+import type { CreateNoteInput, UpdateNoteInput } from "../api/dto/songs.dto";
+import { generateNoteId, formatNotesData } from "../modules/notes/_utils/note.utils";
+import { useSongs } from "./useSongs";
 
 type UseNotesParams = {
 	initialNotes?: Note[];
@@ -9,43 +11,7 @@ type UseNotesParams = {
 	persistToLocalStorage?: boolean;
 };
 
-export type CreateNoteInput = {
-	track: number;
-	time: number;
-	title: string;
-	description?: string;
-	color: string;
-};
-
-export type UpdateNoteInput = {
-	track?: number;
-	time?: number;
-	title?: string;
-	description?: string;
-	color?: string;
-};
-
 const DEFAULT_NOTES: Note[] = [];
-
-function generateNoteId() {
-	return Date.now() + Math.floor(Math.random() * 1000);
-}
-
-function normalizeNote(note: Note) {
-	const timestamp = new Date();
-
-	return {
-		...note,
-		id: note.id ?? generateNoteId(),
-		createdAt: note.createdAt ?? timestamp,
-		updatedAt: note.updatedAt ?? timestamp,
-		description: note.description ?? "",
-	};
-}
-
-function normalizeNotes(notes: Note[]) {
-	return notes.map((note) => normalizeNote(note));
-}
 
 export function useNotes({
 	initialNotes = DEFAULT_NOTES,
@@ -53,18 +19,19 @@ export function useNotes({
 	sourceSong = null,
 	persistToLocalStorage = false,
 }: UseNotesParams = {}) {
-	const [notes, setNotes] = useState<Note[]>(() => normalizeNotes(initialNotes));
+	const [notes, setNotes] = useState<Note[]>(() => formatNotesData(initialNotes));
 	const songRef = useRef<Song | null>(sourceSong);
+	const { saveNoteToLocalStorage } = useSongs();
 
 	useEffect(() => {
 		songRef.current = sourceSong;
 	}, [sourceSong]);
 
 	useEffect(() => {
-		setNotes(normalizeNotes(initialNotes));
+		setNotes(formatNotesData(initialNotes));
 	}, [initialNotes]);
 
-	function emitChange(nextNotes: Note[]) {
+	function onChangeNotes(nextNotes: Note[]) {
 		setNotes(nextNotes);
 
 		let updatedSong: Song | null = null;
@@ -88,13 +55,13 @@ export function useNotes({
 			songRef.current = updatedSong;
 
 			if (persistToLocalStorage) {
-				persistSong(updatedSong);
+				saveNoteToLocalStorage(updatedSong);
 			}
 		}
 	}
 
 	function loadNotes(nextNotes: Note[]) {
-		emitChange(normalizeNotes(nextNotes));
+		onChangeNotes(formatNotesData(nextNotes));
 	}
 
 	function createNote(input: CreateNoteInput) {
@@ -112,7 +79,7 @@ export function useNotes({
 		};
 
 		const nextNotes = [...notes, newNote];
-		emitChange(nextNotes);
+		onChangeNotes(nextNotes);
 		return newNote;
 	}
 
@@ -124,6 +91,7 @@ export function useNotes({
 		}
 
 		const timestamp = new Date();
+
 		const updatedNote: Note = {
 			...notes[index],
 			...updates,
@@ -134,12 +102,12 @@ export function useNotes({
 
 		const nextNotes = [...notes];
 		nextNotes[index] = updatedNote;
-		emitChange(nextNotes);
+		onChangeNotes(nextNotes);
 	}
 
 	function deleteNote(noteId: number) {
 		const nextNotes = notes.filter((note) => note.id !== noteId);
-		emitChange(nextNotes);
+		onChangeNotes(nextNotes);
 	}
 
 	return {
@@ -150,23 +118,3 @@ export function useNotes({
 		deleteNote,
 	};
 }
-
-function persistSong(song: Song) {
-	try {
-		const cachedSongsRaw = localStorage.getItem(StorageKey.CACHED_SONGS);
-		const cachedSongs = cachedSongsRaw ? (JSON.parse(cachedSongsRaw) as Song[]) : [];
-		const index = cachedSongs.findIndex((existingSong) => existingSong.id === song.id);
-
-		if (index === -1) {
-			cachedSongs.push(song);
-		} else {
-			cachedSongs[index] = song;
-		}
-
-		localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(cachedSongs));
-	} catch {
-		// ignore storage errors
-	}
-}
-
-

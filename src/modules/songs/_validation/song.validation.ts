@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import type { TrackType } from "../../../enums/track.enum";
+import type { TrackType } from "../../../api/enums/track.enum";
 import { TRACK_LABEL_OPTIONS } from "../_utils/song.utils";
 
 const NUMBER_TRANSFORM = (value: unknown, originalValue: unknown) => {

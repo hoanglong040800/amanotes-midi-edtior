@@ -4,13 +4,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Controller, FormProvider, type Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import type { CreateNoteInput } from "../../../hooks/useNotes";
+import type { CreateNoteInput } from "../../../api/dto/songs.dto";
 import { createNoteFormSchema } from "../_validation/note.validation";
 
 type NoteFormValues = {
@@ -35,8 +34,6 @@ const DEFAULT_VALUES: NoteFormValues = {
 	description: "",
 	color: "#3B82F6",
 };
-
-const TRACK_OPTIONS = Array.from({ length: 8 }, (_, index) => index + 1);
 
 const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) => {
 	const form = useForm<NoteFormValues>({
@@ -87,48 +84,43 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 			<FormProvider {...form}>
 				<form onSubmit={submitForm} noValidate>
 					<DialogTitle>Create Note</DialogTitle>
+
 					<DialogContent sx={{ pt: 2 }}>
 						<Stack spacing={2}>
-							<Controller
-								name="track"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										select
-										label="Track"
-										value={field.value}
-										onChange={(event) => field.onChange(Number(event.target.value))}
-										error={Boolean(errors.track)}
-										helperText={errors.track?.message}
-										required
-										fullWidth
-									>
-										{TRACK_OPTIONS.map((trackNumber) => (
-											<MenuItem key={trackNumber} value={trackNumber}>
-												Track {trackNumber}
-											</MenuItem>
-										))}
-									</TextField>
-								)}
+							<TextField
+								{...register("track", { valueAsNumber: true })}
+								label="Track"
+								type="number"
+								fullWidth
+								required
+								slotProps={{
+									htmlInput: {
+										min: 1,
+										max: 8,
+										step: 1,
+									},
+								}}
+								error={!!errors.track}
+								helperText={errors.track?.message}
 							/>
 
 							<TextField
+								{...register("time", { valueAsNumber: true })}
 								label="Time"
 								type="number"
 								fullWidth
 								required
-								inputProps={{
-									min: 0,
-									max: maxDuration,
-									step: 0.1,
-								}}
 								slotProps={{
+									htmlInput: {
+										min: 0,
+										max: maxDuration,
+										step: 0.1,
+									},
 									input: {
 										endAdornment: <InputAdornment position="end">s</InputAdornment>,
 									},
 								}}
-								{...register("time", { valueAsNumber: true })}
-								error={Boolean(errors.time)}
+								error={!!errors.time}
 								helperText={errors.time?.message}
 							/>
 
@@ -149,7 +141,7 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 								multiline
 								minRows={2}
 								{...register("description")}
-								error={Boolean(errors.description)}
+								error={!!errors.description}
 								helperText={errors.description?.message}
 							/>
 
@@ -161,10 +153,9 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 										label="Color"
 										type="color"
 										fullWidth
-										InputLabelProps={{ shrink: true }}
 										value={field.value}
 										onChange={field.onChange}
-										error={Boolean(errors.color)}
+										error={!!errors.color}
 										helperText={errors.color?.message}
 									/>
 								)}
@@ -184,5 +175,3 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 };
 
 export default NoteActionPopup;
-
-
