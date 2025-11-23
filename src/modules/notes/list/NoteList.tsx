@@ -6,10 +6,11 @@ import NoteItem from "../item/NoteItem";
 type Props = {
 	notes: Note[];
 	songId: string;
+	onEdit: (noteId: number) => void;
 	onDelete: (noteId: number) => void;
 };
 
-const NoteList = ({ notes, songId, onDelete }: Props) => {
+const NoteList = ({ notes, songId, onEdit, onDelete }: Props) => {
 	if (notes.length === 0) {
 		return <Typography variant="body2">No notes yet.</Typography>;
 	}
@@ -17,7 +18,7 @@ const NoteList = ({ notes, songId, onDelete }: Props) => {
 	return (
 		<List disablePadding>
 			{notes.map((note) => (
-				<NoteItem key={note.id} note={note} songId={songId} onDelete={onDelete} />
+				<NoteItem key={note.id} note={note} songId={songId} onEdit={onEdit} onDelete={onDelete} />
 			))}
 		</List>
 	);

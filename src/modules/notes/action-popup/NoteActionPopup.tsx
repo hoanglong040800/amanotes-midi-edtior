@@ -9,7 +9,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { Controller, FormProvider, type Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import type { CreateNoteInput } from "../../../backend/dto/note.dto";
+import type { CreateNoteInput, UpdateNoteInput } from "../../../backend/dto/note.dto";
+import type { Note } from "../../../backend/types/song.types";
 import { createNoteFormSchema } from "../_validation/note.validation";
 
 type NoteFormValues = {
@@ -23,8 +24,11 @@ type NoteFormValues = {
 type Props = {
 	isOpen: boolean;
 	maxDuration: number;
+	mode?: "create" | "edit";
+	editingNote?: Note | null;
 	onClose: () => void;
 	onCreateNote: (input: CreateNoteInput) => void;
+	onUpdateNote?: (noteId: number, input: UpdateNoteInput) => void;
 };
 
 const DEFAULT_VALUES: NoteFormValues = {
@@ -35,7 +39,7 @@ const DEFAULT_VALUES: NoteFormValues = {
 	color: "#3B82F6",
 };
 
-const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) => {
+const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, onClose, onCreateNote, onUpdateNote }: Props) => {
 	const form = useForm<NoteFormValues>({
 		defaultValues: DEFAULT_VALUES,
 		resolver: yupResolver(createNoteFormSchema(maxDuration)) as Resolver<NoteFormValues>,
@@ -53,10 +57,18 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 	} = form;
 
 	useEffect(() => {
-		if (!isOpen) {
+		if (isOpen && mode === "edit" && editingNote) {
+			reset({
+				track: editingNote.track,
+				time: editingNote.time,
+				title: editingNote.title,
+				description: editingNote.description ?? "",
+				color: editingNote.color,
+			});
+		} else if (!isOpen) {
 			reset(DEFAULT_VALUES);
 		}
-	}, [isOpen, reset]);
+	}, [isOpen, mode, editingNote, reset]);
 
 	useEffect(() => {
 		const currentTime = getValues("time");
@@ -67,13 +79,23 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 	}, [getValues, maxDuration, setValue]);
 
 	const submitForm = handleSubmit((values) => {
-		onCreateNote({
-			track: values.track,
-			time: values.time,
-			title: values.title,
-			description: values.description,
-			color: values.color,
-		});
+		if (mode === "edit" && editingNote && onUpdateNote) {
+			onUpdateNote(editingNote.id, {
+				track: values.track,
+				time: values.time,
+				title: values.title,
+				description: values.description,
+				color: values.color,
+			});
+		} else {
+			onCreateNote({
+				track: values.track,
+				time: values.time,
+				title: values.title,
+				description: values.description,
+				color: values.color,
+			});
+		}
 
 		reset(DEFAULT_VALUES);
 		onClose();
@@ -83,7 +105,7 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 		<Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
 			<FormProvider {...form}>
 				<form onSubmit={submitForm} noValidate>
-					<DialogTitle>Create Note</DialogTitle>
+					<DialogTitle>{mode === "edit" ? "Update Note" : "Create Note"}</DialogTitle>
 
 					<DialogContent sx={{ pt: 2 }}>
 						<Stack spacing={2}>
@@ -162,12 +184,12 @@ const NoteActionPopup = ({ isOpen, maxDuration, onClose, onCreateNote }: Props) 
 							/>
 						</Stack>
 					</DialogContent>
-					<DialogActions sx={{ px: 3, pb: 3 }}>
-						<Button onClick={onClose}>Cancel</Button>
-						<Button type="submit" variant="contained" disabled={isSubmitting}>
-							Create
-						</Button>
-					</DialogActions>
+				<DialogActions sx={{ px: 3, pb: 3 }}>
+					<Button onClick={onClose}>Cancel</Button>
+					<Button type="submit" variant="contained" disabled={isSubmitting}>
+						{mode === "edit" ? "Update" : "Create"}
+					</Button>
+				</DialogActions>
 				</form>
 			</FormProvider>
 		</Dialog>

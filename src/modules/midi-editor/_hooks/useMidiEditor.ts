@@ -9,6 +9,7 @@ type UseMidiEditorParams = {
 
 export function useMidiEditor({ song }: UseMidiEditorParams) {
 	const [isNotePopupOpen, setNotePopupOpen] = useState(false);
+	const [editingNote, setEditingNote] = useState<Note | null>(null);
 	const [notes, setNotes] = useState<Note[]>(() => song?.notes ?? []);
 
 	useEffect(() => {
@@ -22,11 +23,22 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 			return;
 		}
 
+		setEditingNote(null);
+		setNotePopupOpen(true);
+	}
+
+	function openNotePopupForEdit(note: Note) {
+		if (!song) {
+			return;
+		}
+
+		setEditingNote(note);
 		setNotePopupOpen(true);
 	}
 
 	function closeNotePopup() {
 		setNotePopupOpen(false);
+		setEditingNote(null);
 	}
 
 	async function onCreateNote(input: CreateNoteInput) {
@@ -72,7 +84,9 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 		notes,
 		maxDuration,
 		isNotePopupOpen,
+		editingNote,
 		openNotePopup,
+		openNotePopupForEdit,
 		closeNotePopup,
 		onCreateNote,
 		onUpdateNote,

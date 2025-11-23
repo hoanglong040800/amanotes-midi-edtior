@@ -14,10 +14,27 @@ type Props = {
 };
 
 const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
-	const { notes, maxDuration, isNotePopupOpen, openNotePopup, closeNotePopup, onCreateNote, onDeleteNote } =
-		useMidiEditor({
-			song,
-		});
+	const {
+		notes,
+		maxDuration,
+		isNotePopupOpen,
+		editingNote,
+		openNotePopup,
+		openNotePopupForEdit,
+		closeNotePopup,
+		onCreateNote,
+		onUpdateNote,
+		onDeleteNote,
+	} = useMidiEditor({
+		song,
+	});
+
+	function handleEdit(noteId: number) {
+		const note = notes.find((n) => n.id === noteId);
+		if (note) {
+			openNotePopupForEdit(note);
+		}
+	}
 
 	if (loading) {
 		return (
@@ -51,14 +68,17 @@ const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
 			</Stack>
 
 			<Stack spacing={1}>
-				<NoteList notes={notes} songId={song.id} onDelete={onDeleteNote} />
+				<NoteList notes={notes} songId={song.id} onEdit={handleEdit} onDelete={onDeleteNote} />
 			</Stack>
 
 			<NoteActionPopup
 				isOpen={isNotePopupOpen}
 				maxDuration={maxDuration}
+				mode={editingNote ? "edit" : "create"}
+				editingNote={editingNote}
 				onClose={closeNotePopup}
 				onCreateNote={onCreateNote}
+				onUpdateNote={onUpdateNote}
 			/>
 		</Stack>
 	);
