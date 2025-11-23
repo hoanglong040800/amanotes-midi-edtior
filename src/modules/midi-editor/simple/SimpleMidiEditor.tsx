@@ -1,4 +1,3 @@
-import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,11 +8,9 @@ import { useMidiEditor } from "../_hooks/useMidiEditor";
 
 type Props = {
 	song: Song | null;
-	loading: boolean;
-	error?: string | null;
 };
 
-const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
+const SimpleMidiEditor = ({ song }: Props) => {
 	const {
 		notes,
 		maxDuration,
@@ -34,25 +31,6 @@ const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
 		if (note) {
 			openNotePopupForEdit(note);
 		}
-	}
-
-	if (loading) {
-		return (
-			<Stack spacing={2} alignItems="center" paddingY={4}>
-				<CircularProgress />
-				<Typography variant="body2" color="text.secondary">
-					Loading song data...
-				</Typography>
-			</Stack>
-		);
-	}
-
-	if (error) {
-		return (
-			<Typography variant="body1" color="error">
-				{error}
-			</Typography>
-		);
 	}
 
 	if (!song) {

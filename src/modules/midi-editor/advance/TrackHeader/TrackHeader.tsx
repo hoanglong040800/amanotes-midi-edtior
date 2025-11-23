@@ -1,3 +1,4 @@
+import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
 import styles from "./TrackHeader.module.scss";
 
 type Props = {};
@@ -22,7 +23,7 @@ const TrackHeader = ({}: Props) => {
 		.slice(0, 8);
 
 	return (
-		<div className={styles.trackHeader}>
+		<div className={styles.trackHeader} style={{ marginLeft: TIME_RULER_WIDTH }}>
 			{tracks.map((trackNumber, index) => (
 				<div key={trackNumber} className={styles.cell}>
 					<span className={styles.number}>{trackNumber}</span>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import type { ChangeEvent, MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
 import { useSongs } from "../../hooks/useSongs";
 import type { Song } from "../../backend/types/song.types";
-import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
 import styles from "./MidiEditorPage.module.scss";
+import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
 
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
@@ -16,7 +16,6 @@ const MidiEditorPage = () => {
 	const [song, setSong] = useState<Song | null>(null);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
-	const [showSongInfo, setShowSongInfo] = useState(true);
 
 	async function fetchSong() {
 		setLoadError(null);
@@ -58,10 +57,6 @@ const MidiEditorPage = () => {
 		setEditorMode(nextMode);
 	};
 
-	const handleSongInfoToggle = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-		setShowSongInfo(checked);
-	};
-
 	// ---- EFFECTS ----
 
 	useEffect(() => {
@@ -88,24 +83,19 @@ const MidiEditorPage = () => {
 		}
 
 		if (editorMode === "simple") {
-			return <SimpleMidiEditor song={song} loading={isLoading} error={loadError} />;
+			return <SimpleMidiEditor song={song} />;
 		}
 
-		return <AdvancedMidiEditor song={song} loading={isLoading} error={loadError} />;
+		return <AdvancedMidiEditor song={song} />;
 	};
-
-	const canShowSongInfo = Boolean(showSongInfo && !isLoading && !loadError && song);
 
 	return (
 		<Box className={styles.editor}>
 			<EditorInfoSection
 				song={song}
 				editorMode={editorMode}
-				showSongInfo={showSongInfo}
-				showMetadata={canShowSongInfo}
 				onBack={handleBack}
 				onEditorModeChange={handleEditorModeChange}
-				onSongInfoToggle={handleSongInfoToggle}
 			/>
 			<Box className={styles.editorCard}>{renderEditorContent()}</Box>
 		</Box>

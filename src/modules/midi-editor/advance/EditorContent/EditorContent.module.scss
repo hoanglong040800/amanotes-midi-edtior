@@ -1,0 +1,71 @@
+.wrapper {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+	width: 100%;
+	border: 1px solid #dfe3ea;
+	border-radius: 8px;
+	background-color: #ffffff;
+}
+
+.grid {
+	flex: 1;
+	display: grid;
+	width: 100%;
+	min-width: 100%;
+}
+
+.row {
+	display: contents;
+}
+
+.rulerCell,
+.contentCell {
+	min-height: 48px;
+	border-bottom: 1px solid #e6e9ee;
+}
+
+.rulerCell {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 8px 16px;
+	border-right: 1px solid #cdd3dd;
+	background-color: #f7f8fa;
+}
+
+.rulerCellAlt {
+	background-color: #ffffff;
+}
+
+.rulerCellLast,
+.contentCellLast {
+	border-bottom: none;
+}
+
+.contentCell {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 0 24px;
+	background-color: #ffffff;
+}
+
+.contentCellAlt {
+	background-color: #fbfcfd;
+}
+
+.timelineLine {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background-color: #dfe3ea;
+}
+
+.timelineLabel {
+	font-size: 0.875rem;
+	color: #5a6472;
+}
+

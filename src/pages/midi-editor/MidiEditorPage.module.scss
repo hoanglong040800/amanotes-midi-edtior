@@ -4,13 +4,19 @@
 	gap: 16px;
 	padding: 8px;
 	width: 100%;
+	min-height: 100vh;
 }
 
 .editorCard {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
 	border: 1px solid #e5e7eb;
 	border-radius: 8px;
 	background: #fff;
 	padding: 20px 24px;
+	overflow: hidden;
 }
 
 .desc {
