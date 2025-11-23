@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Song } from "../api/types/song.types";
+import type { Song } from "../backend/types/song.types";
 import { StorageKey } from "../enums/common.enum";
 
 const SAMPLE_SONGS_URL = "/src/data/sample-songs.json";
@@ -122,26 +122,6 @@ export function useSongs() {
 		navigate(`/songs/${index}/editor`);
 	}
 
-	function saveNoteToLocalStorage(song: Song) {
-		try {
-			const cachedSongsRaw = localStorage.getItem(StorageKey.CACHED_SONGS);
-			const cachedSongs: Song[] = cachedSongsRaw ? JSON.parse(cachedSongsRaw) : [];
-
-			const index = cachedSongs.findIndex((existingSong) => existingSong.id === song.id);
-
-			// new song, new notes
-			if (index === -1) {
-				cachedSongs.push(song);
-			} else {
-				cachedSongs[index] = song;
-			}
-
-			localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(cachedSongs));
-		} catch (error) {
-			console.error("Failed to save note to local storage", error);
-		}
-	}
-
 	return {
 		isLoading,
 		loadMultiSongs,
@@ -150,6 +130,5 @@ export function useSongs() {
 		onUpdateSong,
 		onDeleteSong,
 		onOpenEditor,
-		saveNoteToLocalStorage,
 	};
 }

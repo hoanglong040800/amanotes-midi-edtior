@@ -1,6 +1,6 @@
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import type { Note } from "../../../api/types/song.types";
+import type { Note } from "../../../backend/types/song.types";
 
 type Props = {
 	note: Note;

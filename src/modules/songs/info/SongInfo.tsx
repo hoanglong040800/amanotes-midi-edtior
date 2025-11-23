@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { Song } from "../../../api/types/song.types";
+import type { Song } from "../../../backend/types/song.types";
 import SongMetadata from "../metadata/SongMetadata";
 
 type Props = {

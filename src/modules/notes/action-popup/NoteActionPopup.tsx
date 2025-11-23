@@ -9,7 +9,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { Controller, FormProvider, type Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import type { CreateNoteInput } from "../../../api/dto/songs.dto";
+import type { CreateNoteInput } from "../../../backend/dto/songs.dto";
 import { createNoteFormSchema } from "../_validation/note.validation";
 
 type NoteFormValues = {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Note, Song } from "../api/types/song.types";
-import type { CreateNoteInput, UpdateNoteInput } from "../api/dto/songs.dto";
+import type { Note, Song } from "../backend/types/song.types";
+import type { CreateNoteInput, UpdateNoteInput } from "../backend/dto/songs.dto";
 import { generateNoteId, formatNotesData } from "../modules/notes/_utils/note.utils";
 import { useSongs } from "./useSongs";
 
@@ -13,7 +13,7 @@ const DEFAULT_NOTES: Note[] = [];
 
 export function useNotes({ initialNotes = DEFAULT_NOTES, song }: UseNotesParams) {
 	const [notes, setNotes] = useState<Note[]>(() => formatNotesData(initialNotes));
-	const { saveNoteToLocalStorage } = useSongs();
+	const { onUpdateSong } = useSongs();
 
 	useEffect(() => {
 		setNotes(formatNotesData(initialNotes));
@@ -30,7 +30,7 @@ export function useNotes({ initialNotes = DEFAULT_NOTES, song }: UseNotesParams)
 			updatedAt: new Date(),
 		};
 
-		saveNoteToLocalStorage(updatedSong);
+		onUpdateSong(updatedSong.id, updatedSong);
 	}
 
 	function createNote(input: CreateNoteInput) {

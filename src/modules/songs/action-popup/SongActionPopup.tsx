@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormProvider } from "react-hook-form";
-import type { Song } from "../../../api/types/song.types";
+import type { Song } from "../../../backend/types/song.types";
 import { useSongActionPopup } from "../_hooks/useSongActionPopup";
 import MultiSelect from "../../../components/inputs/multi-select/MultiSelect";
 import styles from "./SongActionPopup.module.scss";
