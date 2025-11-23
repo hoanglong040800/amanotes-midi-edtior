@@ -1,4 +1,5 @@
 import type { Song } from "../types/song.types";
+import type { CreateSongInput, UpdateSongInput } from "../dto/song.dto";
 import { StorageKey } from "../../enums/common.enum";
 
 const SAMPLE_SONGS_URL = "/src/backend/data/sample-songs.json";
@@ -44,10 +45,25 @@ async function saveSongs(songs: Song[]): Promise<void> {
 	localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(songs));
 }
 
-async function createSong(song: Song): Promise<Song> {
+function generateSongId(): string {
+	return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+
+async function createSong(input: CreateSongInput): Promise<Song> {
 	const songs = await fetchSongs();
-	const songId = song.id ?? `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-	const newSong: Song = { ...song, id: songId };
+	const timestamp = new Date();
+
+	const newSong: Song = {
+		id: generateSongId(),
+		name: input.name,
+		description: input.description,
+		totalDuration: input.totalDuration,
+		trackLabels: input.trackLabels,
+		notes: [],
+		tags: input.tags ?? [],
+		createdAt: timestamp,
+		updatedAt: timestamp,
+	};
 
 	const updatedSongs = [...songs, newSong];
 	await saveSongs(updatedSongs);
@@ -55,7 +71,7 @@ async function createSong(song: Song): Promise<Song> {
 	return newSong;
 }
 
-async function updateSong(songId: string, song: Song): Promise<Song> {
+async function updateSong(songId: string, updates: UpdateSongInput): Promise<Song> {
 	const songs = await fetchSongs();
 	const songIndex = songs.findIndex((s) => s.id === songId);
 
@@ -66,8 +82,10 @@ async function updateSong(songId: string, song: Song): Promise<Song> {
 	const existingSong = songs[songIndex];
 	const updatedSong: Song = {
 		...existingSong,
-		...song,
+		...updates,
 		id: existingSong.id,
+		createdAt: existingSong.createdAt,
+		updatedAt: new Date(),
 	};
 
 	const updatedSongs = [...songs];

@@ -1,0 +1,27 @@
+.item {
+    border-bottom: 1px solid #e5e7eb;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.colorBox {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.deleteButton {
+    margin-left: auto;
+    color: rgba(0, 0, 0, 0.54);
+    
+    &:hover {
+        color: #d32f2f;
+        background-color: rgba(211, 47, 47, 0.04);
+    }
+}
+

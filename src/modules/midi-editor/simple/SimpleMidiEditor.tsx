@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import NoteList from "../../notes/list/NoteList";
 import NoteActionPopup from "../../notes/action-popup/NoteActionPopup";
 import type { Song } from "../../../backend/types/song.types";
-import { useSimpleEditorPage } from "../_hooks/useSimpleEditorPage";
+import { useMidiEditor } from "../_hooks/useMidiEditor";
 
 type Props = {
 	song: Song | null;
@@ -14,8 +14,8 @@ type Props = {
 };
 
 const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
-	const { notes, maxDuration, isNotePopupOpen, openNotePopup, closeNotePopup, handleCreateNote } =
-		useSimpleEditorPage({
+	const { notes, maxDuration, isNotePopupOpen, openNotePopup, closeNotePopup, onCreateNote, onDeleteNote } =
+		useMidiEditor({
 			song,
 		});
 
@@ -51,14 +51,14 @@ const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
 			</Stack>
 
 			<Stack spacing={1}>
-				<NoteList notes={notes} />
+				<NoteList notes={notes} songId={song.id} onDelete={onDeleteNote} />
 			</Stack>
 
 			<NoteActionPopup
 				isOpen={isNotePopupOpen}
 				maxDuration={maxDuration}
 				onClose={closeNotePopup}
-				onCreateNote={handleCreateNote}
+				onCreateNote={onCreateNote}
 			/>
 		</Stack>
 	);

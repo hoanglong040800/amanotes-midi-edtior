@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { useSongs } from "../../hooks/useSongs";
 import type { Song } from "../../backend/types/song.types";
+import type { CreateSongInput, UpdateSongInput } from "../../backend/dto/song.dto";
 import SongListHeader from "../../modules/songs/list-header/SongListHeader";
 import SongList from "../../modules/songs/list/SongList";
 import SongActionPopup from "../../modules/songs/action-popup/SongActionPopup";
@@ -36,9 +37,23 @@ const SongListPage = () => {
 	const handleSubmitSong = async (song: Song) => {
 		try {
 			if (actionMode === "edit" && inEditSongId !== null) {
-				await onUpdateSong(inEditSongId, song);
+				const updates: UpdateSongInput = {
+					name: song.name,
+					description: song.description,
+					totalDuration: song.totalDuration,
+					trackLabels: song.trackLabels,
+					tags: song.tags,
+				};
+				await onUpdateSong(inEditSongId, updates);
 			} else {
-				await onCreateSong(song);
+				const input: CreateSongInput = {
+					name: song.name,
+					description: song.description,
+					totalDuration: song.totalDuration,
+					trackLabels: song.trackLabels,
+					tags: song.tags,
+				};
+				await onCreateSong(input);
 			}
 			// Refresh songs list
 			await fetchSongs();

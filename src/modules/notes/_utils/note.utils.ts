@@ -1,7 +1,8 @@
 import type { Note } from "../../../backend/types/song.types";
 
 export function generateNoteId() {
-	return Date.now() + Math.floor(Math.random() * 1000);
+	const id = Date.now() + Math.floor(Math.random() * 1000);
+	return id.toString();
 }
 
 export function normalizeNote(note: Note) {

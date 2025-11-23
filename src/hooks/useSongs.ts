@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Song } from "../backend/types/song.types";
+import type { CreateSongInput, UpdateSongInput } from "../backend/dto/song.dto";
 import { SongApi } from "../backend/api";
 
 export function useSongs() {
@@ -35,9 +36,9 @@ export function useSongs() {
 		}
 	}
 
-	async function onCreateSong(song: Song): Promise<Song> {
+	async function onCreateSong(input: CreateSongInput): Promise<Song> {
 		try {
-			const newSong = await SongApi.createSong(song);
+			const newSong = await SongApi.createSong(input);
 			return newSong;
 		} catch (error) {
 			console.error("Failed to create song:", error);
@@ -45,9 +46,9 @@ export function useSongs() {
 		}
 	}
 
-	async function onUpdateSong(songId: string, song: Song): Promise<Song> {
+	async function onUpdateSong(songId: string, updates: UpdateSongInput): Promise<Song> {
 		try {
-			const updatedSong = await SongApi.updateSong(songId, song);
+			const updatedSong = await SongApi.updateSong(songId, updates);
 			return updatedSong;
 		} catch (error) {
 			console.error("Failed to update song:", error);

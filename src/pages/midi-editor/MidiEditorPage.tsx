@@ -12,7 +12,7 @@ import styles from "./MidiEditorPage.module.scss";
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
 	const { songId } = useParams<{ songId: string }>();
-	const { isLoading, loadSingleSong, onUpdateSong } = useSongs();
+	const { isLoading, loadSingleSong } = useSongs();
 	const [song, setSong] = useState<Song | null>(null);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("simple");
