@@ -13,7 +13,7 @@ const SongListPage = () => {
 		useSongs();
 	const [isPopupOpen, setPopupOpen] = useState(false);
 	const [actionMode, setActionMode] = useState<"create" | "edit">("create");
-	const [inEditSongId, setInEditSongId] = useState<number | null>(null);
+	const [inEditSongId, setInEditSongId] = useState<string | null>(null);
 
 	const handleAddClick = () => {
 		setActionMode("create");
@@ -21,7 +21,7 @@ const SongListPage = () => {
 		setPopupOpen(true);
 	};
 
-	const handleEditSong = (id: number) => {
+	const handleEditSong = (id: string) => {
 		setActionMode("edit");
 		setInEditSongId(id);
 		setPopupOpen(true);
@@ -47,7 +47,7 @@ const SongListPage = () => {
 		}
 	};
 
-	const handleDeleteSong = async (songId: number) => {
+	const handleDeleteSong = async (songId: string) => {
 		try {
 			await onDeleteSong(songId);
 			// Refresh songs list

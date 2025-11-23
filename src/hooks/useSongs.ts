@@ -1,24 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Song } from "../backend/types/song.types";
 import { SongApi } from "../backend/api";
 
 export function useSongs() {
 	const [isLoading, setIsLoading] = useState(false);
-	const navigate = useNavigate();
 
-	async function loadSingleSong(id: number): Promise<Song | null> {
+	async function loadSingleSong(id: string): Promise<Song | null> {
 		setIsLoading(true);
 
-		if (id === undefined) {
+		if (!id) {
 			return null;
 		}
 
 		try {
-			if (Number.isNaN(id) || id < 0) {
-				return null;
-			}
-
 			const song = await SongApi.fetchSongById(id);
 			return song;
 		} catch {
@@ -51,7 +45,7 @@ export function useSongs() {
 		}
 	}
 
-	async function onUpdateSong(songId: number, song: Song): Promise<Song> {
+	async function onUpdateSong(songId: string, song: Song): Promise<Song> {
 		try {
 			const updatedSong = await SongApi.updateSong(songId, song);
 			return updatedSong;
@@ -61,7 +55,7 @@ export function useSongs() {
 		}
 	}
 
-	async function onDeleteSong(songId: number): Promise<void> {
+	async function onDeleteSong(songId: string): Promise<void> {
 		try {
 			await SongApi.deleteSong(songId);
 		} catch (error) {

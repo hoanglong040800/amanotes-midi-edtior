@@ -12,7 +12,7 @@ export type Note = {
 };
 
 export type Song = {
-	id: number;
+	id: string;
 	name: string;
 	description: string;
 	totalDuration: number; // in seconds

@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "1123412-134132",
     "name": "Rock Beat 120 BPM",
     "description": "Simple rock drum pattern",
     "totalDuration": 30,
@@ -38,7 +38,7 @@
     "tags": []
   },
   {
-    "id": 2,
+    "id": "512341-1234",
     "name": "Electronic Groove",
     "description": "Synth bassline with drums",
     "totalDuration": 180,

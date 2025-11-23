@@ -5,7 +5,7 @@ export const NoteApi = {
 	updateNotesInSong,
 };
 
-async function updateNotesInSong(songId: number, notes: Note[]): Promise<Song> {
+async function updateNotesInSong(songId: string, notes: Note[]): Promise<Song> {
 	// just for mockup
 	const songs = await SongApi.fetchSongs();
 	const songIndex = songs.findIndex((s) => s.id === songId);

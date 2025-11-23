@@ -21,8 +21,14 @@ const MidiEditorPage = () => {
 	async function fetchSong() {
 		setLoadError(null);
 
+		if (!songId) {
+			setLoadError("No song ID provided");
+			setSong(null);
+			return;
+		}
+
 		try {
-			const foundSong = await loadSingleSong(Number(songId));
+			const foundSong = await loadSingleSong(songId);
 
 			if (!foundSong) {
 				setLoadError("Song not found");
@@ -39,15 +45,6 @@ const MidiEditorPage = () => {
 
 	const handleBack = () => {
 		navigate("/songs");
-	};
-
-	const handleSongUpdate = async (updatedSong: Song) => {
-		setSong(updatedSong);
-		try {
-			await onUpdateSong(updatedSong.id, updatedSong);
-		} catch (error) {
-			console.error("Failed to update song:", error);
-		}
 	};
 
 	const handleEditorModeChange = (
@@ -91,14 +88,7 @@ const MidiEditorPage = () => {
 		}
 
 		if (editorMode === "simple") {
-			return (
-				<SimpleMidiEditor
-					song={song}
-					loading={isLoading}
-					error={loadError}
-					onSongUpdate={handleSongUpdate}
-				/>
-			);
+			return <SimpleMidiEditor song={song} loading={isLoading} error={loadError} />;
 		}
 
 		return <AdvancedMidiEditor song={song} loading={isLoading} error={loadError} />;

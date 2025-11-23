@@ -6,14 +6,14 @@ import SongItems from "./SongItems";
 type Props = {
 	songs: Song[];
 	loading?: boolean;
-	onDeleteSong: (songId: number) => void;
-	onEditSong: (songId: number) => void;
+	onDeleteSong: (songId: string) => void;
+	onEditSong: (songId: string) => void;
 };
 
 const SongList = ({ songs, loading = false, onDeleteSong, onEditSong }: Props) => {
-	const [pendingDeleteSongId, setPendingDeleteSongId] = useState<number | null>(null);
+	const [pendingDeleteSongId, setPendingDeleteSongId] = useState<string | null>(null);
 
-	const handleOpenConfirm = (songId: number) => setPendingDeleteSongId(songId);
+	const handleOpenConfirm = (songId: string) => setPendingDeleteSongId(songId);
 	const handleCloseConfirm = () => setPendingDeleteSongId(null);
 	const handleConfirmDelete = () => {
 		if (pendingDeleteSongId === null) return;

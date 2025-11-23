@@ -1,7 +1,7 @@
 import type { Song } from "../types/song.types";
 import { StorageKey } from "../../enums/common.enum";
 
-const SAMPLE_SONGS_URL = "/src/data/sample-songs.json";
+const SAMPLE_SONGS_URL = "/src/backend/data/sample-songs.json";
 
 export const SongApi = {
 	fetchSongsFromRemote,
@@ -35,7 +35,7 @@ async function fetchSongs(): Promise<Song[]> {
 	return await fetchSongsFromRemote();
 }
 
-async function fetchSongById(id: number): Promise<Song | null> {
+async function fetchSongById(id: string): Promise<Song | null> {
 	const songs = await fetchSongs();
 	return songs.find((song) => song.id === id) ?? null;
 }
@@ -46,7 +46,7 @@ async function saveSongs(songs: Song[]): Promise<void> {
 
 async function createSong(song: Song): Promise<Song> {
 	const songs = await fetchSongs();
-	const songId = song.id ?? Date.now() + Math.floor(Math.random() * 1000);
+	const songId = song.id ?? `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 	const newSong: Song = { ...song, id: songId };
 
 	const updatedSongs = [...songs, newSong];
@@ -55,7 +55,7 @@ async function createSong(song: Song): Promise<Song> {
 	return newSong;
 }
 
-async function updateSong(songId: number, song: Song): Promise<Song> {
+async function updateSong(songId: string, song: Song): Promise<Song> {
 	const songs = await fetchSongs();
 	const songIndex = songs.findIndex((s) => s.id === songId);
 
@@ -78,7 +78,7 @@ async function updateSong(songId: number, song: Song): Promise<Song> {
 	return updatedSong;
 }
 
-async function deleteSong(songId: number): Promise<void> {
+async function deleteSong(songId: string): Promise<void> {
 	const songs = await fetchSongs();
 	const updatedSongs = songs.filter((song) => song.id !== songId);
 

@@ -8,8 +8,8 @@ import styles from "./SongItems.module.scss";
 
 type Props = {
 	songs: Song[];
-	onEditSong: (songId: number) => void;
-	onDeleteRequest: (songId: number) => void;
+	onEditSong: (songId: string) => void;
+	onDeleteRequest: (songId: string) => void;
 };
 
 const SongItems = ({ songs, onEditSong, onDeleteRequest }: Props) => (

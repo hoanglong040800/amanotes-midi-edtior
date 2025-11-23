@@ -11,14 +11,12 @@ type Props = {
 	song: Song | null;
 	loading: boolean;
 	error?: string | null;
-	onSongUpdate: (updatedSong: Song) => void;
 };
 
-const SimpleMidiEditor = ({ song, loading, error = null, onSongUpdate }: Props) => {
+const SimpleMidiEditor = ({ song, loading, error = null }: Props) => {
 	const { notes, maxDuration, isNotePopupOpen, openNotePopup, closeNotePopup, handleCreateNote } =
 		useSimpleEditorPage({
 			song,
-			onSongUpdate,
 		});
 
 	if (loading) {
