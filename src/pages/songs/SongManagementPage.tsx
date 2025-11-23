@@ -9,7 +9,7 @@ import styles from "./SongManagementPage.module.scss";
 
 const SongListPage = () => {
 	const [songs, setSongs] = useState<Song[]>([]);
-	const { isLoading, loadMultiSongs, onCreateSong, onUpdateSong, onDeleteSong, onOpenEditor } =
+	const { isLoading, loadMultiSongs, onCreateSong, onUpdateSong, onDeleteSong } =
 		useSongs();
 	const [isPopupOpen, setPopupOpen] = useState(false);
 	const [actionMode, setActionMode] = useState<"create" | "edit">("create");
@@ -33,19 +33,28 @@ const SongListPage = () => {
 		setActionMode("create");
 	};
 
-	const handleSubmitSong = (song: Song) => {
-		if (actionMode === "edit" && inEditSongId !== null) {
-			const updatedSongs = onUpdateSong(inEditSongId, song);
-			setSongs(updatedSongs);
-		} else {
-			const updatedSongs = onCreateSong(song);
-			setSongs(updatedSongs);
+	const handleSubmitSong = async (song: Song) => {
+		try {
+			if (actionMode === "edit" && inEditSongId !== null) {
+				await onUpdateSong(inEditSongId, song);
+			} else {
+				await onCreateSong(song);
+			}
+			// Refresh songs list
+			await fetchSongs();
+		} catch (error) {
+			console.error("Failed to submit song:", error);
 		}
 	};
 
-	const handleDeleteSong = (songId: number) => {
-		const updatedSongs = onDeleteSong(songId);
-		setSongs(updatedSongs);
+	const handleDeleteSong = async (songId: number) => {
+		try {
+			await onDeleteSong(songId);
+			// Refresh songs list
+			await fetchSongs();
+		} catch (error) {
+			console.error("Failed to delete song:", error);
+		}
 	};
 
 	async function fetchSongs() {
@@ -60,14 +69,13 @@ const SongListPage = () => {
 	return (
 		<>
 			<Container maxWidth="md" className={styles.editor}>
-				<SongListHeader onAddClick={handleAddClick} />
-				<SongList
-					songs={songs}
-					loading={isLoading}
-					onDeleteSong={handleDeleteSong}
-					onEditSong={handleEditSong}
-					onOpenEditorPage={onOpenEditor}
-				/>
+			<SongListHeader onAddClick={handleAddClick} />
+			<SongList
+				songs={songs}
+				loading={isLoading}
+				onDeleteSong={handleDeleteSong}
+				onEditSong={handleEditSong}
+			/>
 			</Container>
 
 			<SongActionPopup

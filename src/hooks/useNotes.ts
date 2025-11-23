@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Note, Song } from "../backend/types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../backend/dto/songs.dto";
 import { generateNoteId, formatNotesData } from "../modules/notes/_utils/note.utils";
-import { useSongs } from "./useSongs";
+import { NoteApi } from "../backend/api";
 
 type UseNotesParams = {
 	initialNotes?: Note[];
@@ -13,24 +13,21 @@ const DEFAULT_NOTES: Note[] = [];
 
 export function useNotes({ initialNotes = DEFAULT_NOTES, song }: UseNotesParams) {
 	const [notes, setNotes] = useState<Note[]>(() => formatNotesData(initialNotes));
-	const { onUpdateSong } = useSongs();
 
 	useEffect(() => {
 		setNotes(formatNotesData(initialNotes));
 	}, [initialNotes]);
 
-	function saveNotesToSong(nextNotes: Note[]) {
+	async function saveNotesToSong(nextNotes: Note[]) {
 		if (!song) {
 			return;
 		}
 
-		const updatedSong: Song = {
-			...song,
-			notes: nextNotes,
-			updatedAt: new Date(),
-		};
-
-		onUpdateSong(updatedSong.id, updatedSong);
+		try {
+			await NoteApi.updateNotesInSong(song.id, nextNotes);
+		} catch (error) {
+			console.error("Failed to save notes to song:", error);
+		}
 	}
 
 	function createNote(input: CreateNoteInput) {

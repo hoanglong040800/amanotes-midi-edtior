@@ -1,6 +1,14 @@
 import type { ChangeEvent, MouseEvent } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { Box, Button, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	FormControlLabel,
+	Switch,
+	ToggleButton,
+	ToggleButtonGroup,
+	Typography,
+} from "@mui/material";
 import SongInfo from "../../songs/info/SongInfo";
 import type { Song } from "../../../backend/types/song.types";
 import styles from "./EditorInfoSection.module.scss";
@@ -34,6 +42,7 @@ const EditorInfoSection = ({
 			>
 				Back to songs
 			</Button>
+
 			<ToggleButtonGroup
 				value={editorMode}
 				exclusive
@@ -44,21 +53,27 @@ const EditorInfoSection = ({
 				<ToggleButton value="simple" className={styles.modeToggleButton}>
 					Simple
 				</ToggleButton>
+
 				<ToggleButton value="advanced" className={styles.modeToggleButton}>
 					Advanced
 				</ToggleButton>
 			</ToggleButtonGroup>
 		</Box>
+
 		<Box className={styles.titleRow}>
 			<Typography variant="h4" component="h1" gutterBottom className={styles.title}>
-				{song?.name ?? "MIDI Editor"}
+				{song?.name || "MIDI Editor"}
 			</Typography>
+
 			<FormControlLabel
 				className={styles.infoSwitch}
-				control={<Switch checked={showSongInfo} onChange={onSongInfoToggle} size="small" color="primary" />}
+				control={
+					<Switch checked={showSongInfo} onChange={onSongInfoToggle} size="small" color="primary" />
+				}
 				label="Song info"
 			/>
 		</Box>
+
 		{showMetadata && song ? (
 			<Box className={styles.songInfo}>
 				<SongInfo song={song} />
@@ -68,4 +83,3 @@ const EditorInfoSection = ({
 );
 
 export default EditorInfoSection;
-

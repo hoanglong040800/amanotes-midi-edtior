@@ -41,9 +41,13 @@ const MidiEditorPage = () => {
 		navigate("/songs");
 	};
 
-	const handleSongUpdate = (updatedSong: Song) => {
+	const handleSongUpdate = async (updatedSong: Song) => {
 		setSong(updatedSong);
-		onUpdateSong(updatedSong.id, updatedSong);
+		try {
+			await onUpdateSong(updatedSong.id, updatedSong);
+		} catch (error) {
+			console.error("Failed to update song:", error);
+		}
 	};
 
 	const handleEditorModeChange = (

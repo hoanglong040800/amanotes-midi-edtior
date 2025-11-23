@@ -5,29 +5,22 @@ import Typography from "@mui/material/Typography";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import styles from "./SongCard.module.scss";
 import type { Song } from "../../../backend/types/song.types";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
 	song: Song;
-	onOpenEditor?: () => void;
 };
 
-const SongCard = ({ song, onOpenEditor }: Props) => {
-	const handleOpenEditor = () => {
-		if (!onOpenEditor) {
-			return;
-		}
+const SongCard = ({ song }: Props) => {
+	const navigate = useNavigate();
 
-		onOpenEditor();
+	const handleOpenEditor = () => {
+		navigate(`/songs/${song.id}/editor`);
 	};
 
 	return (
 		<Card className={styles.card} variant="outlined">
-			<CardActionArea
-				className={styles.action}
-				onClick={handleOpenEditor}
-				disabled={!onOpenEditor}
-				aria-label={onOpenEditor ? "Open MIDI editor" : undefined}
-			>
+			<CardActionArea className={styles.action} onClick={handleOpenEditor}>
 				<CardContent className={styles.content}>
 					<div className={styles.text}>
 						<Typography variant="h6" className={styles.title}>
@@ -38,11 +31,9 @@ const SongCard = ({ song, onOpenEditor }: Props) => {
 						</Typography>
 					</div>
 
-					{onOpenEditor ? (
-						<div className={styles.openEditor} aria-hidden>
-							<ChevronRightIcon fontSize="small" />
-						</div>
-					) : null}
+					<div className={styles.openEditor} aria-hidden>
+						<ChevronRightIcon fontSize="small" />
+					</div>
 				</CardContent>
 			</CardActionArea>
 		</Card>

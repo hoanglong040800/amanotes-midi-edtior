@@ -1,58 +1,26 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Song } from "../backend/types/song.types";
-import { StorageKey } from "../enums/common.enum";
-
-const SAMPLE_SONGS_URL = "/src/data/sample-songs.json";
+import { SongApi } from "../backend/api";
 
 export function useSongs() {
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
-	async function fetchSongsFromSource(): Promise<Song[]> {
-		const response = await fetch(SAMPLE_SONGS_URL);
-		if (!response.ok) {
-			throw new Error("Failed to load songs.");
-		}
-
-		const data = (await response.json()) as Song[];
-		localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(data));
-		return data;
-	}
-
-	async function getSongs(): Promise<Song[]> {
-		const cached = localStorage.getItem(StorageKey.CACHED_SONGS);
-
-		if (cached) {
-			return JSON.parse(cached) as Song[];
-		}
-
-		return fetchSongsFromSource();
-	}
-
-	function getSongsFromStorage(): Song[] {
-		const cached = localStorage.getItem(StorageKey.CACHED_SONGS);
-		return cached ? (JSON.parse(cached) as Song[]) : [];
-	}
-
-	function saveSongsToStorage(songs: Song[]): void {
-		localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(songs));
-	}
-
-	async function loadSingleSong(index: number): Promise<Song | null> {
+	async function loadSingleSong(id: number): Promise<Song | null> {
 		setIsLoading(true);
 
-		if (index === undefined) {
+		if (id === undefined) {
 			return null;
 		}
 
 		try {
-			if (Number.isNaN(index) || index < 0) {
+			if (Number.isNaN(id) || id < 0) {
 				return null;
 			}
 
-			const allSongs = await getSongs();
-			return allSongs[index] ?? null;
+			const song = await SongApi.fetchSongById(id);
+			return song;
 		} catch {
 			return null;
 		} finally {
@@ -64,8 +32,8 @@ export function useSongs() {
 		setIsLoading(true);
 
 		try {
-			const data = await getSongs();
-			return data;
+			const songs = await SongApi.fetchSongs();
+			return songs;
 		} catch {
 			return [];
 		} finally {
@@ -73,53 +41,33 @@ export function useSongs() {
 		}
 	}
 
-	function generateSongId(): number {
-		return Date.now() + Math.floor(Math.random() * 1000);
-	}
-
-	function onCreateSong(song: Song): Song[] {
-		const currentSongs = getSongsFromStorage();
-		const songId = song.id ?? generateSongId();
-		const songWithId: Song = { ...song, id: songId };
-		const updatedSongs = [...currentSongs, songWithId];
-
-		saveSongsToStorage(updatedSongs);
-		return updatedSongs;
-	}
-
-	function onUpdateSong(songId: number, song: Song): Song[] {
-		const currentSongs = getSongsFromStorage();
-		const songIndex = currentSongs.findIndex((existingSong) => existingSong.id === songId);
-
-		const isSongNotFound = songIndex === -1;
-		if (isSongNotFound) {
-			return currentSongs;
+	async function onCreateSong(song: Song): Promise<Song> {
+		try {
+			const newSong = await SongApi.createSong(song);
+			return newSong;
+		} catch (error) {
+			console.error("Failed to create song:", error);
+			throw error;
 		}
-
-		const existingSong = currentSongs[songIndex];
-		const updatedSong = {
-			...existingSong,
-			...song,
-			id: existingSong.id,
-		};
-
-		const updatedSongs = [...currentSongs];
-		updatedSongs[songIndex] = updatedSong;
-
-		saveSongsToStorage(updatedSongs);
-		return updatedSongs;
 	}
 
-	function onDeleteSong(songId: number): Song[] {
-		const currentSongs = getSongsFromStorage();
-		const updatedSongs = currentSongs.filter((song) => song.id !== songId);
-
-		saveSongsToStorage(updatedSongs);
-		return updatedSongs;
+	async function onUpdateSong(songId: number, song: Song): Promise<Song> {
+		try {
+			const updatedSong = await SongApi.updateSong(songId, song);
+			return updatedSong;
+		} catch (error) {
+			console.error("Failed to update song:", error);
+			throw error;
+		}
 	}
 
-	function onOpenEditor(index: number) {
-		navigate(`/songs/${index}/editor`);
+	async function onDeleteSong(songId: number): Promise<void> {
+		try {
+			await SongApi.deleteSong(songId);
+		} catch (error) {
+			console.error("Failed to delete song:", error);
+			throw error;
+		}
 	}
 
 	return {
@@ -129,6 +77,5 @@ export function useSongs() {
 		onCreateSong,
 		onUpdateSong,
 		onDeleteSong,
-		onOpenEditor,
 	};
 }

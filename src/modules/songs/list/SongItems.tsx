@@ -9,11 +9,10 @@ import styles from "./SongItems.module.scss";
 type Props = {
 	songs: Song[];
 	onEditSong: (songId: number) => void;
-	onOpenEditor: (index: number) => void;
 	onDeleteRequest: (songId: number) => void;
 };
 
-const SongItems = ({ songs, onEditSong, onOpenEditor, onDeleteRequest }: Props) => (
+const SongItems = ({ songs, onEditSong, onDeleteRequest }: Props) => (
 	<div className={styles.list}>
 		{songs.map((song, idx) => (
 			<div key={`${song.id ?? song.name}-${idx}`} className={styles.item}>
@@ -27,10 +26,10 @@ const SongItems = ({ songs, onEditSong, onOpenEditor, onDeleteRequest }: Props) 
 					</IconButton>
 				</div>
 
-				<div className={styles.content}>
-					<SongCard song={song} onOpenEditor={() => onOpenEditor(idx)} />
-					<SongMetadata song={song} />
-				</div>
+			<div className={styles.content}>
+				<SongCard song={song} />
+				<SongMetadata song={song} />
+			</div>
 			</div>
 		))}
 	</div>
