@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Note, Song } from "../api/types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../api/dto/songs.dto";
 import { generateNoteId, formatNotesData } from "../modules/notes/_utils/note.utils";
@@ -6,62 +6,31 @@ import { useSongs } from "./useSongs";
 
 type UseNotesParams = {
 	initialNotes?: Note[];
-	onNotesChange?: (notes: Note[]) => Song | void;
-	sourceSong?: Song | null;
-	persistToLocalStorage?: boolean;
+	song: Song | null;
 };
 
 const DEFAULT_NOTES: Note[] = [];
 
-export function useNotes({
-	initialNotes = DEFAULT_NOTES,
-	onNotesChange,
-	sourceSong = null,
-	persistToLocalStorage = false,
-}: UseNotesParams = {}) {
+export function useNotes({ initialNotes = DEFAULT_NOTES, song }: UseNotesParams) {
 	const [notes, setNotes] = useState<Note[]>(() => formatNotesData(initialNotes));
-	const songRef = useRef<Song | null>(sourceSong);
 	const { saveNoteToLocalStorage } = useSongs();
-
-	useEffect(() => {
-		songRef.current = sourceSong;
-	}, [sourceSong]);
 
 	useEffect(() => {
 		setNotes(formatNotesData(initialNotes));
 	}, [initialNotes]);
 
-	function onChangeNotes(nextNotes: Note[]) {
-		setNotes(nextNotes);
-
-		let updatedSong: Song | null = null;
-
-		if (onNotesChange) {
-			const result = onNotesChange(nextNotes);
-			if (result) {
-				updatedSong = result;
-			}
+	function saveNotesToSong(nextNotes: Note[]) {
+		if (!song) {
+			return;
 		}
 
-		if (!updatedSong && songRef.current) {
-			updatedSong = {
-				...songRef.current,
-				notes: nextNotes,
-				updatedAt: new Date(),
-			};
-		}
+		const updatedSong: Song = {
+			...song,
+			notes: nextNotes,
+			updatedAt: new Date(),
+		};
 
-		if (updatedSong) {
-			songRef.current = updatedSong;
-
-			if (persistToLocalStorage) {
-				saveNoteToLocalStorage(updatedSong);
-			}
-		}
-	}
-
-	function loadNotes(nextNotes: Note[]) {
-		onChangeNotes(formatNotesData(nextNotes));
+		saveNoteToLocalStorage(updatedSong);
 	}
 
 	function createNote(input: CreateNoteInput) {
@@ -79,7 +48,8 @@ export function useNotes({
 		};
 
 		const nextNotes = [...notes, newNote];
-		onChangeNotes(nextNotes);
+		setNotes(nextNotes);
+		saveNotesToSong(nextNotes);
 		return newNote;
 	}
 
@@ -102,17 +72,18 @@ export function useNotes({
 
 		const nextNotes = [...notes];
 		nextNotes[index] = updatedNote;
-		onChangeNotes(nextNotes);
+		setNotes(nextNotes);
+		saveNotesToSong(nextNotes);
 	}
 
 	function deleteNote(noteId: number) {
 		const nextNotes = notes.filter((note) => note.id !== noteId);
-		onChangeNotes(nextNotes);
+		setNotes(nextNotes);
+		saveNotesToSong(nextNotes);
 	}
 
 	return {
 		notes,
-		loadNotes,
 		createNote,
 		updateNote,
 		deleteNote,

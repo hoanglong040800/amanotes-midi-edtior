@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { Note, Song } from "../../../api/types/song.types";
+import { useEffect, useState } from "react";
+import type { Song } from "../../../api/types/song.types";
 import type { CreateNoteInput } from "../../../api/dto/songs.dto";
 import { useNotes } from "../../../hooks/useNotes";
 
@@ -13,24 +13,22 @@ export function useSimpleEditorPage({ song, onSongUpdate }: UseSimpleEditorPageP
 
 	const { notes, createNote } = useNotes({
 		initialNotes: song?.notes ?? [],
-		sourceSong: song ?? null,
-		persistToLocalStorage: Boolean(song),
-		onNotesChange: (nextNotes: Note[]) => {
-			if (!song) {
-				return;
-			}
-
-			const timestamp = new Date();
-			const updatedSong: Song = {
-				...song,
-				notes: nextNotes,
-				updatedAt: timestamp,
-			};
-
-			onSongUpdate(updatedSong);
-			return updatedSong;
-		},
+		song,
 	});
+
+	useEffect(() => {
+		if (!song) {
+			return;
+		}
+
+		const updatedSong: Song = {
+			...song,
+			notes,
+			updatedAt: new Date(),
+		};
+
+		onSongUpdate(updatedSong);
+	}, [notes]);
 
 	const maxDuration = song?.totalDuration ?? 0;
 
@@ -66,5 +64,3 @@ export function useSimpleEditorPage({ song, onSongUpdate }: UseSimpleEditorPageP
 		handleCreateNote,
 	};
 }
-
-
