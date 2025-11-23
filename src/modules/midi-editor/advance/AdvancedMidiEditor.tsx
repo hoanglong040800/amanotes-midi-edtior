@@ -2,6 +2,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { Song } from "../../../backend/types/song.types";
+import { Box } from "@mui/material";
+import TrackHeader from "../track-header/TrackHeader";
 
 type Props = {
 	song: Song | null;
@@ -34,12 +36,9 @@ const AdvancedMidiEditor = ({ song, loading, error = null }: Props) => {
 	}
 
 	return (
-		<Stack spacing={3}>
-			<Typography variant="subtitle1">Advanced Editor</Typography>
-			<Typography variant="body2" color="text.secondary">
-				Advanced MIDI editing capabilities will appear here.
-			</Typography>
-		</Stack>
+		<Box>
+			<TrackHeader />
+		</Box>
 	);
 };
 

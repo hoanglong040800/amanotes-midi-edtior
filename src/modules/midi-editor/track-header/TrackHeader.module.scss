@@ -1,0 +1,43 @@
+.trackHeader {
+	display: grid;
+	grid-template-columns: repeat(8, minmax(80px, 1fr));
+	border: 1px solid #dfe3ea;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.cell {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
+	padding: 8px 4px;
+	background-color: #fbfcfd;
+	border-right: 1px solid #e6e9ee;
+}
+
+.cell:first-child {
+	border-left: none;
+}
+
+.cell:nth-child(2n) {
+	background-color: #f5f6f8;
+	border-right-color: #cdd3dd;
+	box-shadow: inset 1px 0 0 #cdd3dd;
+}
+
+.number {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #1f2a37;
+	line-height: 1.1;
+}
+
+.label {
+	font-size: 0.875rem;
+	color: #5a6472;
+	line-height: 1.2;
+	margin-top: 4px;
+}
+
