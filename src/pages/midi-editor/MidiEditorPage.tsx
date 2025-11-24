@@ -5,16 +5,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
 import { useSongs } from "../../hooks/useSongs";
-import type { Song } from "../../backend/types/song.types";
 import styles from "./MidiEditorPage.module.scss";
 import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
+import type { GetSongWithNotes } from "../../backend/dto/song.dto";
 
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
 	const { songId } = useParams<{ songId: string }>();
 	const { loadSingleSong } = useSongs();
 	const [isLoading, setIsLoading] = useState(true);
-	const [song, setSong] = useState<Song | null>(null);
+	const [song, setSong] = useState<GetSongWithNotes | null>(null);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
 

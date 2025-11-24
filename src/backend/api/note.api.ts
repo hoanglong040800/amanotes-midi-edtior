@@ -1,6 +1,7 @@
 import type { Note } from "../types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../dto/note.dto";
 import { StorageKey } from "../../enums/common.enum";
+import { v4 as uuidv4 } from 'uuid';
 
 const SAMPLE_NOTES_URL = "/src/backend/data/sample-notes.json";
 
@@ -10,10 +11,6 @@ export const NoteApi = {
 	deleteNote,
 	fetchNotesBySongId
 };
-
-function generateNoteId(): number {
-	return Date.now() + Math.floor(Math.random() * 1000);
-}
 
 async function _saveNotesToLocalStorage(notes: Note[]) {
 	localStorage.setItem(StorageKey.CACHED_NOTES, JSON.stringify(notes));
@@ -51,7 +48,7 @@ function buildNewNote(input: CreateNoteInput): Note {
 	const timestamp = new Date();
 
 	return {
-		id: generateNoteId(),
+		id: uuidv4(),
 		track: input.track,
 		time: input.time,
 		title: input.title.trim(),
@@ -75,7 +72,7 @@ function buildUpdatedNote(existingNote: Note, updates: UpdateNoteInput): Note {
 	};
 }
 
-async function createNote(songId: string, input: CreateNoteInput): Promise<Note> {
+async function createNote(input: CreateNoteInput): Promise<Note> {
 	const allNotes = await fetchAllNotes();
 
 	const isDuplicate = allNotes.some(
@@ -94,7 +91,7 @@ async function createNote(songId: string, input: CreateNoteInput): Promise<Note>
 	return newNote;
 }
 
-async function updateNote(songId: string, noteId: number, updates: UpdateNoteInput): Promise<Note> {
+async function updateNote(noteId: string, updates: UpdateNoteInput): Promise<Note> {
 	const allNotes = await fetchAllNotes();
 	const noteIndex = allNotes.findIndex((note) => note.id === noteId);
 
@@ -111,7 +108,7 @@ async function updateNote(songId: string, noteId: number, updates: UpdateNoteInp
 	return updatedNote;
 }
 
-async function deleteNote(songId: string, noteId: number): Promise<void> {
+async function deleteNote(noteId: string): Promise<void> {
 	const allNotes = await fetchAllNotes();
 
 	const updatedNotes = allNotes.filter((note) => note.id !== noteId);

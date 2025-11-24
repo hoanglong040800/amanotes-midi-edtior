@@ -1,28 +1,18 @@
 import type { MouseEvent } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import {
-	Box,
-	Button,
-	ToggleButton,
-	ToggleButtonGroup,
-	Typography,
-} from "@mui/material";
-import type { Song } from "../../../backend/types/song.types";
+import { Box, Button, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+
 import styles from "./EditorInfoSection.module.scss";
+import type { GetSongWithNotes } from "../../../backend/dto/song.dto";
 
 type Props = {
-	song: Song | null;
+	song: GetSongWithNotes;
 	editorMode: "simple" | "advanced";
 	onBack: () => void;
 	onEditorModeChange: (event: MouseEvent<HTMLElement>, mode: "simple" | "advanced" | null) => void;
 };
 
-const EditorInfoSection = ({
-	song,
-	editorMode,
-	onBack,
-	onEditorModeChange,
-}: Props) => (
+const EditorInfoSection = ({ song, editorMode, onBack, onEditorModeChange }: Props) => (
 	<Box className={styles.container}>
 		<Box className={styles.headerRow}>
 			<Button

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import type { Note, Song } from "../../../backend/types/song.types";
+import type { Note } from "../../../backend/types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../../../backend/dto/note.dto";
 import { NoteApi } from "../../../backend/api";
 import type { CellNotesByTime } from "../_types/midi-editor.types";
+import type { GetSongWithNotes } from "../../../backend/dto/song.dto";
 
 type UseMidiEditorParams = {
-	song: Song;
+	song: GetSongWithNotes;
 };
 
 export function useMidiEditor({ song }: UseMidiEditorParams) {
@@ -73,26 +74,31 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 
 	async function onCreateNote(input: CreateNoteInput) {
 		try {
-			const newNote = await NoteApi.createNote(song.id, input);
+			const newNote = await NoteApi.createNote(input);
 			setNotes([...notes, newNote]);
+			setCellNotesByTime(mapNotesToCellNotesByTime([...notes, newNote]));
 		} catch (error) {
 			console.error("Failed to create note:", error);
 		}
 	}
 
-	async function onUpdateNote(noteId: number, updates: UpdateNoteInput) {
+	async function onUpdateNote(noteId: string, updates: UpdateNoteInput) {
 		try {
-			const updatedNote = await NoteApi.updateNote(song.id, noteId, updates);
-			setNotes(notes.map((note) => (note.id === noteId ? updatedNote : note)));
+			const updatedNote = await NoteApi.updateNote(noteId, updates);
+			const updatedNotes = notes.map((note) => (note.id === noteId ? updatedNote : note));
+			setNotes(updatedNotes);
+			setCellNotesByTime(mapNotesToCellNotesByTime(updatedNotes));
 		} catch (error) {
 			console.error("Failed to update note:", error);
 		}
 	}
 
-	async function onDeleteNote(noteId: number) {
+	async function onDeleteNote(noteId: string) {
 		try {
-			await NoteApi.deleteNote(song.id, noteId);
-			setNotes(notes.filter((note) => note.id !== noteId));
+			await NoteApi.deleteNote(noteId);
+			const updatedNotes = notes.filter((note) => note.id !== noteId);
+			setNotes(updatedNotes);
+			setCellNotesByTime(mapNotesToCellNotesByTime(updatedNotes));
 		} catch (error) {
 			console.error("Failed to delete note:", error);
 		}

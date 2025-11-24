@@ -2,6 +2,7 @@ import type { Song } from "../types/song.types";
 import type { CreateSongInput, GetSongWithNotes, UpdateSongInput } from "../dto/song.dto";
 import { StorageKey } from "../../enums/common.enum";
 import { NoteApi } from "./note.api";
+import { v4 as uuidv4 } from "uuid";
 
 const SAMPLE_SONGS_URL = "/src/backend/data/sample-songs.json";
 
@@ -56,16 +57,12 @@ async function _saveSongsToLocalStorage(songs: Song[]): Promise<void> {
 	localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(songs));
 }
 
-function _generateSongId(): string {
-	return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-}
-
 async function createSong(input: CreateSongInput): Promise<Song> {
 	const songs = await fetchSongs();
 	const timestamp = new Date();
 
 	const newSong: Song = {
-		id: _generateSongId(),
+		id: uuidv4(),
 		name: input.name,
 		description: input.description,
 		totalDuration: input.totalDuration,

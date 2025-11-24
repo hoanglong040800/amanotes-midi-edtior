@@ -1,7 +1,7 @@
 import { TrackType } from "../enums/track.enum";
 
 export type Note = {
-	id: number;
+	id: string;
 	track: number; // from 1 - 8
 	time: number;
 	title: string;

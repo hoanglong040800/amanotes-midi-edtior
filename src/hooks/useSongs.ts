@@ -6,7 +6,7 @@ import { SongApi } from "../backend/api";
 export function useSongs() {
 	const [isLoading, setIsLoading] = useState(false);
 
-	async function loadSingleSong(id: string): Promise<Song | null> {
+	async function loadSingleSong(id: string): Promise<GetSongWithNotes | null> {
 		setIsLoading(true);
 
 		if (!id) {
