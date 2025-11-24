@@ -1,18 +1,16 @@
-import Typography from "@mui/material/Typography";
 import type { Song } from "../../../backend/types/song.types";
 import { Box } from "@mui/material";
 import TrackHeader from "./track-header/TrackHeader";
 import EditorContent from "./content/EditorContent";
 import styles from "./AdvancedMidiEditor.module.scss";
+import { useMidiEditor } from "../_hooks/useMidiEditor";
 
 type Props = {
-	song: Song | null;
+	song: Song;
 };
 
 const AdvancedMidiEditor = ({ song }: Props) => {
-	if (!song) {
-		return <Typography variant="body1">Song not found.</Typography>;
-	}
+	const { timeline, cellNotesByTime } = useMidiEditor({ song });
 
 	return (
 		<Box className={styles.container}>
@@ -21,7 +19,7 @@ const AdvancedMidiEditor = ({ song }: Props) => {
 			</Box>
 
 			<Box className={styles.content}>
-				<EditorContent song={song} />
+				<EditorContent timeline={timeline} cellNotesByTime={cellNotesByTime} />
 			</Box>
 		</Box>
 	);

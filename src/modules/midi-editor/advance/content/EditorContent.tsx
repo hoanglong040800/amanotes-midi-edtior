@@ -4,17 +4,17 @@ import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
-import { useEditorContent } from "../../_hooks/useEditorContent";
 import styles from "./EditorContent.module.scss";
 import TimeRow from "../time-row/TimeRow";
-import type { Song } from "../../../../backend/types";
+import type { CellNotesByTime } from "../../_types/midi-editor.types";
 
 type Props = {
-	song: Song;
+	timeline: number[];
+	cellNotesByTime: CellNotesByTime;
 };
 
-const EditorContent = ({ song }: Props) => {
-	const { timeline, cellNotesByTime } = useEditorContent({ song });
+const EditorContent = ({ timeline, cellNotesByTime }: Props) => {
+	
 	const tableStyle = { "--ruler-width": `${TIME_RULER_WIDTH}px` } as CSSProperties;
 
 	return (

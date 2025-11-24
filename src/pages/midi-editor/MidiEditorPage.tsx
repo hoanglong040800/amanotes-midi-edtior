@@ -82,6 +82,14 @@ const MidiEditorPage = () => {
 			);
 		}
 
+		if (!song) {
+			return (
+				<Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+					<Typography color="error">Song not found</Typography>
+				</Box>
+			);
+		}
+
 		if (editorMode === "simple") {
 			return <SimpleMidiEditor song={song} />;
 		}

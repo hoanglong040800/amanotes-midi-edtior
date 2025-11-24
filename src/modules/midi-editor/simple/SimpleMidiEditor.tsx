@@ -7,7 +7,7 @@ import type { Song } from "../../../backend/types/song.types";
 import { useMidiEditor } from "../_hooks/useMidiEditor";
 
 type Props = {
-	song: Song | null;
+	song: Song;
 };
 
 const SimpleMidiEditor = ({ song }: Props) => {
@@ -31,10 +31,6 @@ const SimpleMidiEditor = ({ song }: Props) => {
 		if (note) {
 			openNotePopupForEdit(note);
 		}
-	}
-
-	if (!song) {
-		return <Typography variant="body1">Song not found.</Typography>;
 	}
 
 	return (
