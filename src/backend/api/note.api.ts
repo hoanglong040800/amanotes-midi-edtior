@@ -1,6 +1,8 @@
-import type { Note, Song } from "../types/song.types";
+import type { Note } from "../types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../dto/note.dto";
-import { SongApi } from "./song.api";
+import { StorageKey } from "../../enums/common.enum";
+
+const SAMPLE_NOTES_URL = "/src/backend/data/sample-notes.json";
 
 export const NoteApi = {
 	createNote,
@@ -12,19 +14,31 @@ function generateNoteId(): number {
 	return Date.now() + Math.floor(Math.random() * 1000);
 }
 
-async function getSongById(songId: string): Promise<Song> {
-	const songs = await SongApi.fetchSongs();
-	const song = songs.find((s) => s.id === songId);
-
-	if (!song) {
-		throw new Error(`Song with id ${songId} not found`);
-	}
-
-	return song;
+async function _saveNotesToLocalStorage(notes: Note[]) {
+	localStorage.setItem(StorageKey.CACHED_NOTES, JSON.stringify(notes));
 }
 
-async function updateSongNotes(song: Song, notes: Note[]): Promise<Song> {
-	// TODO
+async function fetchAllNotesFromRemote(): Promise<Note[]> {
+	const response = await fetch(SAMPLE_NOTES_URL);
+	if (!response.ok) {
+		throw new Error("Failed to load notes.");
+	}
+
+	const data = (await response.json()) as Note[];
+
+	_saveNotesToLocalStorage(data);
+
+	return data;
+}
+
+function fetchAllNotes() {
+	const cachedNotes = localStorage.getItem(StorageKey.CACHED_NOTES);
+
+	if (cachedNotes) {
+		return JSON.parse(cachedNotes) as Note[];
+	}
+
+	return fetchAllNotesFromRemote();
 }
 
 function buildNewNote(input: CreateNoteInput): Note {
@@ -39,6 +53,9 @@ function buildNewNote(input: CreateNoteInput): Note {
 		color: input.color,
 		createdAt: timestamp,
 		updatedAt: timestamp,
+		song: {
+			id: input.songId,
+		},
 	};
 }
 
@@ -52,10 +69,10 @@ function buildUpdatedNote(existingNote: Note, updates: UpdateNoteInput): Note {
 	};
 }
 
-async function createNote(songId: string, input: CreateNoteInput): Promise<Song> {
-	const song = await getSongById(songId);
-	
-	const isDuplicate = song.notes.some(
+async function createNote(songId: string, input: CreateNoteInput): Promise<Note> {
+	const allNotes = await fetchAllNotes();
+
+	const isDuplicate = allNotes.some(
 		(note) => note.time === input.time && note.track === input.track
 	);
 
@@ -64,33 +81,34 @@ async function createNote(songId: string, input: CreateNoteInput): Promise<Song>
 	}
 
 	const newNote = buildNewNote(input);
-	const updatedNotes = [...song.notes, newNote];
+	const updatedNotes = [...allNotes, newNote];
 
-	return await updateSongNotes(songId, updatedNotes);
+	await _saveNotesToLocalStorage(updatedNotes);
+
+	return newNote;
 }
 
-async function updateNote(
-	songId: string,
-	noteId: number,
-	updates: UpdateNoteInput
-): Promise<Song> {
-	const song = await getSongById(songId);
-	const noteIndex = song.notes.findIndex((note) => note.id === noteId);
+async function updateNote(songId: string, noteId: number, updates: UpdateNoteInput): Promise<Note> {
+	const allNotes = await fetchAllNotes();
+	const noteIndex = allNotes.findIndex((note) => note.id === noteId);
 
 	if (noteIndex === -1) {
 		throw new Error(`Note with id ${noteId} not found`);
 	}
 
-	const updatedNote = buildUpdatedNote(song.notes[noteIndex], updates);
-	const updatedNotes = [...song.notes];
+	const updatedNote = buildUpdatedNote(allNotes[noteIndex], updates);
+	const updatedNotes = [...allNotes];
 	updatedNotes[noteIndex] = updatedNote;
 
-	return await updateSongNotes(songId, updatedNotes);
+	await _saveNotesToLocalStorage(updatedNotes);
+
+	return updatedNote;
 }
 
-async function deleteNote(songId: string, noteId: number): Promise<Song> {
-	const song = await getSongById(songId);
-	const updatedNotes = song.notes.filter((note) => note.id !== noteId);
+async function deleteNote(songId: string, noteId: number): Promise<void> {
+	const allNotes = await fetchAllNotes();
 
-	return await updateSongNotes(songId, updatedNotes);
+	const updatedNotes = allNotes.filter((note) => note.id !== noteId);
+
+	await _saveNotesToLocalStorage(updatedNotes);
 }

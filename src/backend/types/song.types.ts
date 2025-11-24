@@ -9,6 +9,9 @@ export type Note = {
 	color: string;
 	createdAt: Date;
 	updatedAt: Date;
+	song: {
+		id: string;
+	}
 };
 
 export type Song = {

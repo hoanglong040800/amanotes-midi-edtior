@@ -73,8 +73,8 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 
 	async function onCreateNote(input: CreateNoteInput) {
 		try {
-			const updatedSong = await NoteApi.createNote(song.id, input);
-			setNotes(updatedSong.notes);
+			const newNote = await NoteApi.createNote(song.id, input);
+			setNotes([...notes, newNote]);
 		} catch (error) {
 			console.error("Failed to create note:", error);
 		}
@@ -82,8 +82,8 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 
 	async function onUpdateNote(noteId: number, updates: UpdateNoteInput) {
 		try {
-			const updatedSong = await NoteApi.updateNote(song.id, noteId, updates);
-			setNotes(updatedSong.notes);
+			const updatedNote = await NoteApi.updateNote(song.id, noteId, updates);
+			setNotes(notes.map((note) => (note.id === noteId ? updatedNote : note)));
 		} catch (error) {
 			console.error("Failed to update note:", error);
 		}
@@ -91,8 +91,8 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 
 	async function onDeleteNote(noteId: number) {
 		try {
-			const updatedSong = await NoteApi.deleteNote(song.id, noteId);
-			setNotes(updatedSong.notes);
+			await NoteApi.deleteNote(song.id, noteId);
+			setNotes(notes.filter((note) => note.id !== noteId));
 		} catch (error) {
 			console.error("Failed to delete note:", error);
 		}

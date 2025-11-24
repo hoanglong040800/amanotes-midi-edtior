@@ -1,0 +1,78 @@
+[
+  {
+    "id": "c2a648a4-ab72-4b47-8106-ae1e91d7dc08",
+    "track": 1,
+    "time": 0,
+    "title": "Kick",
+    "description": "Main kick drum hit",
+    "color": "#EF4444",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "1123412-134132" }
+  },
+  {
+    "id": "626cf50d-9871-4ad2-8f65-7ad56f10c8cc",
+    "track": 2,
+    "time": 10,
+    "title": "Snare",
+    "description": "Backbeat snare",
+    "color": "#3B82F6",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "1123412-134132" }
+  },
+  {
+    "id": "dd1a6ff9-b33b-4127-9adb-4368daecc0ba",
+    "track": 1,
+    "time": 20,
+    "title": "Kick",
+    "description": "Follow-up kick",
+    "color": "#EF4444",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "1123412-134132" }
+  },
+  {
+    "id": "fdf20466-474e-4c10-bfbe-8476bfd1ce5c",
+    "track": 3,
+    "time": 5,
+    "title": "Hi-Hat",
+    "description": "Closed hi-hat",
+    "color": "#10B981",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "1123412-134132" }
+  },
+  {
+    "id": "c6adf41e-78f6-4c07-87fb-1b2ada3ad599",
+    "track": 3,
+    "time": 0,
+    "title": "Kick",
+    "color": "#EF4444",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "512341-1234" }
+  },
+  {
+    "id": "60a8036b-0816-4990-afff-3c2fcb7f7486",
+    "track": 2,
+    "time": 5,
+    "title": "Bass C",
+    "description": "Root note",
+    "color": "#8B5CF6",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "512341-1234" }
+  },
+  {
+    "id": "9ccfcbb1-c5cd-48fa-a61c-c0213af3b2d0",
+    "track": 1,
+    "time": 20,
+    "title": "Lead",
+    "description": "Melody line",
+    "color": "#06B6D4",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z",
+    "song": { "id": "512341-1234" }
+  }
+]

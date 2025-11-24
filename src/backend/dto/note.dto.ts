@@ -4,6 +4,7 @@ export type CreateNoteInput = {
 	title: string;
 	description?: string;
 	color: string;
+	songId: string;
 };
 
 export type UpdateNoteInput = {

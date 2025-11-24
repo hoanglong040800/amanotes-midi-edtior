@@ -14,7 +14,6 @@ const SongMetadata = ({ song }: Props) => (
 			Track Labels: {song.trackLabels.slice(0, 3).join(", ")}
 			{song.trackLabels.length > 3 ? ", ..." : ""}
 		</Typography>
-		<Typography variant="caption">Notes: {song.notes.length}</Typography>
 	</Stack>
 );
 
