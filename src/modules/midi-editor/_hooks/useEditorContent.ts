@@ -1,10 +1,7 @@
 import { TIME_MARKER_INTERVAL } from "../_const/midi-editor.cons";
 
-type EditorContentStyles = Record<string, string>;
-
 type UseEditorContentParams = {
 	duration: number;
-	styles: EditorContentStyles;
 };
 
 type EditorContentRow = {
@@ -12,29 +9,18 @@ type EditorContentRow = {
 	marker: number;
 	timeLabel: string;
 	timelineLabel: string;
-	rulerClassName: string;
-	contentClassName: string;
 };
 
-export function useEditorContent({ duration, styles }: UseEditorContentParams) {
+export function useEditorContent({ duration }: UseEditorContentParams) {
 	const safeDuration = Math.max(0, Number.isFinite(duration) ? duration : 0);
 	const markers = buildMarkers(safeDuration);
-	const lastIndex = markers.length - 1;
 
 	const rows: EditorContentRow[] = markers.map((marker, index) => {
-		const { rulerClassName, contentClassName } = buildRowClassNames({
-			index,
-			lastIndex,
-			styles,
-		});
-
 		return {
 			id: `marker-${marker}-${index}`,
 			marker,
 			timeLabel: `${marker}s`,
 			timelineLabel: `Timeline row ${index + 1}`,
-			rulerClassName,
-			contentClassName,
 		};
 	});
 
@@ -64,37 +50,5 @@ function buildMarkers(duration: number) {
 	}
 
 	return markers;
-}
-
-type BuildRowClassNamesParams = {
-	index: number;
-	lastIndex: number;
-	styles: EditorContentStyles;
-};
-
-function buildRowClassNames({ index, lastIndex, styles }: BuildRowClassNamesParams) {
-	const isLastRow = index === lastIndex;
-	const isEvenRow = index % 2 === 0;
-
-	const rulerClassName = [
-		styles.rulerCell ?? "",
-		isEvenRow ? "" : styles.rulerCellAlt ?? "",
-		isLastRow ? styles.rulerCellLast ?? "" : "",
-	]
-		.filter(Boolean)
-		.join(" ");
-
-	const contentClassName = [
-		styles.trackCell ?? "",
-		isEvenRow ? "" : styles.trackCellAlt ?? "",
-		isLastRow ? styles.trackCellLast ?? "" : "",
-	]
-		.filter(Boolean)
-		.join(" ");
-
-	return {
-		rulerClassName,
-		contentClassName,
-	};
 }
 

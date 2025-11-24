@@ -5,8 +5,6 @@ import styles from "./TimeRow.module.scss";
 
 type RowData = {
 	timeLabel: string;
-	rulerClassName: string;
-	contentClassName: string;
 };
 
 type Props = {
@@ -18,17 +16,17 @@ const TimeRow = ({ row, trackCount }: Props) => {
 
 	return (
 		<TableRow className={styles.row}>
-			<TableCell className={row.rulerClassName}>
+			<TableCell className={styles.rulerCell}>
 				<Typography variant="body2" color="text.secondary">
 					{row.timeLabel}
 				</Typography>
 			</TableCell>
+
 			{trackColumns.map((_, index) => (
-				<TableCell key={`track-${index}`} className={row.contentClassName} />
+				<TableCell key={`track-${index}`} className={styles.trackCell} />
 			))}
 		</TableRow>
 	);
 };
 
 export default TimeRow;
-

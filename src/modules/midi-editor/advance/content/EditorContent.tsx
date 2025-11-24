@@ -13,7 +13,7 @@ type Props = {
 };
 
 const EditorContent = ({ duration }: Props) => {
-	const { rows } = useEditorContent({ duration, styles });
+	const { rows } = useEditorContent({ duration });
 	const trackCount = 8;
 	const tableStyle = { "--ruler-width": `${TIME_RULER_WIDTH}px` } as CSSProperties;
 

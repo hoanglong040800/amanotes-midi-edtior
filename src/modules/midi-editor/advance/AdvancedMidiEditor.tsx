@@ -1,10 +1,8 @@
-import CircularProgress from "@mui/material/CircularProgress";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { Song } from "../../../backend/types/song.types";
 import { Box } from "@mui/material";
-import TrackHeader from "./TrackHeader/TrackHeader";
-import EditorContent from "./EditorContent/EditorContent";
+import TrackHeader from "./track-header/TrackHeader";
+import EditorContent from "./content/EditorContent";
 import styles from "./AdvancedMidiEditor.module.scss";
 
 type Props = {
