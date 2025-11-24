@@ -7,5 +7,12 @@
 	border: 1px solid #e6e9ee;
 	display: flex;
 	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	transition: filter 0.2s ease;
+
+	&:hover {
+		filter: brightness(0.95);
+	}
 }
 

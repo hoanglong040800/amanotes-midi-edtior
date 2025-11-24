@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import styles from "./TimeRow.module.scss";
-import type { CellNotes } from "../../_types/midi-editor.types";
+import type { CellNotes } from "../../../../types/midi-editor.types";
 import { TRACK_COUNT } from "../../_const/midi-editor.cons";
 import NoteCell from "./note-cell/NoteCell";
 
@@ -23,7 +23,7 @@ const TimeRow = ({ timeMarker, cellNotes }: Props) => {
 			</TableCell>
 
 			{trackColumns.map((track) => (
-				<NoteCell key={track} note={cellNotes?.[track]} />
+				<NoteCell key={track} note={cellNotes?.[track]} time={timeMarker} track={track} />
 			))}
 		</TableRow>
 	);

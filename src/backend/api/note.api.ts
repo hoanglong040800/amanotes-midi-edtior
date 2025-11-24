@@ -1,7 +1,7 @@
 import type { Note } from "../types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../dto/note.dto";
 import { StorageKey } from "../../enums/common.enum";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const SAMPLE_NOTES_URL = "/src/backend/data/sample-notes.json";
 
@@ -9,7 +9,7 @@ export const NoteApi = {
 	createNote,
 	updateNote,
 	deleteNote,
-	fetchNotesBySongId
+	fetchNotesBySongId,
 };
 
 async function _saveNotesToLocalStorage(notes: Note[]) {
@@ -76,7 +76,8 @@ async function createNote(input: CreateNoteInput): Promise<Note> {
 	const allNotes = await fetchAllNotes();
 
 	const isDuplicate = allNotes.some(
-		(note) => note.time === input.time && note.track === input.track
+		(note) =>
+			note.time === input.time && note.track === input.track && note.song.id === input.songId
 	);
 
 	if (isDuplicate) {

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import type { Note } from "../../../backend/types/song.types";
 import type { CreateNoteInput, UpdateNoteInput } from "../../../backend/dto/note.dto";
 import { NoteApi } from "../../../backend/api";
-import type { CellNotesByTime } from "../_types/midi-editor.types";
+import type { CellNotesByTime } from "../../../types/midi-editor.types";
 import type { GetSongWithNotes } from "../../../backend/dto/song.dto";
+import type { CreateNotePopupType } from "../../../types/midi-editor.types";
 
 type UseMidiEditorParams = {
 	song: GetSongWithNotes;
@@ -11,7 +12,9 @@ type UseMidiEditorParams = {
 
 export function useMidiEditor({ song }: UseMidiEditorParams) {
 	const [isNotePopupOpen, setNotePopupOpen] = useState(false);
+	const [actionMode, setActionMode] = useState<"create" | "edit">("create");
 	const [editingNote, setEditingNote] = useState<Note | null>(null);
+	const [createPosition, setCreatePosition] = useState<CreateNotePopupType | null>(null);
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [cellNotesByTime, setCellNotesByTime] = useState<CellNotesByTime>({});
 	const timeline = getTimeline();
@@ -44,12 +47,15 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 
 	const maxDuration = song.totalDuration;
 
-	function openNotePopup() {
+	function openNotePopupCreate(params: CreateNotePopupType) {
+		setActionMode("create");
 		setEditingNote(null);
 		setNotePopupOpen(true);
+		setCreatePosition(params);
 	}
 
 	function openNotePopupForEdit(note: Note) {
+		setActionMode("edit");
 		setEditingNote(note);
 		setNotePopupOpen(true);
 	}
@@ -111,7 +117,9 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 		maxDuration,
 		isNotePopupOpen,
 		editingNote,
-		openNotePopup,
+		actionMode,
+		createPosition,
+		openNotePopupCreate,
 		openNotePopupForEdit,
 		closeNotePopup,
 		onCreateNote,

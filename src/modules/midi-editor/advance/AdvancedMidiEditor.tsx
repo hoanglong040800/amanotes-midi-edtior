@@ -1,15 +1,14 @@
-import type { Song } from "../../../backend/types/song.types";
-import { Box, IconButton } from "@mui/material";
-import Add from "@mui/icons-material/Add";
+import { Box } from "@mui/material";
 import TrackHeader from "./track-header/TrackHeader";
 import EditorContent from "./content/EditorContent";
 import styles from "./AdvancedMidiEditor.module.scss";
 import { useMidiEditor } from "../_hooks/useMidiEditor";
 import NoteActionPopup from "../../notes/action-popup/NoteActionPopup";
-import { TIME_RULER_WIDTH } from "../_const/midi-editor.cons";
+import type { GetSongWithNotes } from "../../../backend/dto/song.dto";
+import { MidiEditorProvider } from "../_context/MidiEditorActionsContext";
 
 type Props = {
-	song: Song;
+	song: GetSongWithNotes;
 };
 
 const AdvancedMidiEditor = ({ song }: Props) => {
@@ -19,24 +18,25 @@ const AdvancedMidiEditor = ({ song }: Props) => {
 		isNotePopupOpen,
 		maxDuration,
 		editingNote,
+		actionMode,
+		createPosition,
 		closeNotePopup,
 		onCreateNote,
 		onUpdateNote,
-		openNotePopup,
+		openNotePopupCreate,
+		onDeleteNote,
+		openNotePopupForEdit,
 	} = useMidiEditor({ song });
 
 	return (
-		<>
+		<MidiEditorProvider
+			value={{
+				openNotePopupCreate,
+				openNotePopupForEdit,
+			}}
+		>
 			<Box className={styles.container}>
 				<Box className={styles.headerWrapper}>
-					<IconButton
-						className={styles.addButton}
-						onClick={openNotePopup}
-						style={{ width: TIME_RULER_WIDTH }}
-					>
-						<Add />
-					</IconButton>
-
 					<TrackHeader />
 				</Box>
 
@@ -46,15 +46,18 @@ const AdvancedMidiEditor = ({ song }: Props) => {
 			</Box>
 
 			<NoteActionPopup
+				songId={song.id}
 				isOpen={isNotePopupOpen}
 				maxDuration={maxDuration}
-				mode={editingNote ? "edit" : "create"}
+				mode={actionMode}
 				editingNote={editingNote}
+				createPosition={createPosition}
 				onClose={closeNotePopup}
 				onCreateNote={onCreateNote}
 				onUpdateNote={onUpdateNote}
+				onDeleteNote={onDeleteNote}
 			/>
-		</>
+		</MidiEditorProvider>
 	);
 };
 

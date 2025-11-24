@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import type { CreateNoteInput, UpdateNoteInput } from "../../../backend/dto/note.dto";
 import type { Note } from "../../../backend/types/song.types";
 import { createNoteFormSchema } from "../_validation/note.validation";
+import styles from "./NoteActionPopup.module.scss";
+import type { CreateNotePopupType } from "../../../types/midi-editor.types";
 
 type NoteFormValues = {
 	track: number;
@@ -22,13 +24,16 @@ type NoteFormValues = {
 };
 
 type Props = {
+	songId: string;
 	isOpen: boolean;
 	maxDuration: number;
 	mode?: "create" | "edit";
 	editingNote?: Note | null;
+	createPosition?: CreateNotePopupType | null;
 	onClose: () => void;
 	onCreateNote: (input: CreateNoteInput) => void;
-	onUpdateNote?: (noteId: number, input: UpdateNoteInput) => void;
+	onUpdateNote: (noteId: string, input: UpdateNoteInput) => void;
+	onDeleteNote: (noteId: string) => void;
 };
 
 const DEFAULT_VALUES: NoteFormValues = {
@@ -39,7 +44,18 @@ const DEFAULT_VALUES: NoteFormValues = {
 	color: "#3B82F6",
 };
 
-const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, onClose, onCreateNote, onUpdateNote }: Props) => {
+const NoteActionPopup = ({
+	songId,
+	isOpen,
+	maxDuration,
+	mode = "create",
+	editingNote,
+	createPosition,
+	onClose,
+	onCreateNote,
+	onUpdateNote,
+	onDeleteNote,
+}: Props) => {
 	const form = useForm<NoteFormValues>({
 		defaultValues: DEFAULT_VALUES,
 		resolver: yupResolver(createNoteFormSchema(maxDuration)) as Resolver<NoteFormValues>,
@@ -56,6 +72,8 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 		getValues,
 	} = form;
 
+	// ----- EFFECTS -----
+
 	useEffect(() => {
 		if (isOpen && mode === "edit" && editingNote) {
 			reset({
@@ -65,18 +83,20 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 				description: editingNote.description ?? "",
 				color: editingNote.color,
 			});
+		} else if (isOpen && mode === "create" && createPosition) {
+			reset({
+				track: createPosition.track,
+				time: createPosition.time,
+				title: "",
+				description: "",
+				color: "#3B82F6",
+			});
 		} else if (!isOpen) {
 			reset(DEFAULT_VALUES);
 		}
 	}, [isOpen, mode, editingNote, reset]);
 
-	useEffect(() => {
-		const currentTime = getValues("time");
-
-		if (currentTime > maxDuration) {
-			setValue("time", maxDuration);
-		}
-	}, [getValues, maxDuration, setValue]);
+	// ----- FUNCTIONS -----
 
 	const submitForm = handleSubmit((values) => {
 		if (mode === "edit" && editingNote && onUpdateNote) {
@@ -94,6 +114,7 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 				title: values.title,
 				description: values.description,
 				color: values.color,
+				songId: songId,
 			});
 		}
 
@@ -101,14 +122,16 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 		onClose();
 	});
 
+	// ----- RENDER -----
+
 	return (
 		<Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
 			<FormProvider {...form}>
 				<form onSubmit={submitForm} noValidate>
 					<DialogTitle>{mode === "edit" ? "Update Note" : "Create Note"}</DialogTitle>
 
-					<DialogContent sx={{ pt: 2 }}>
-						<Stack spacing={2}>
+					<DialogContent className={styles.content}>
+						<Stack spacing={2} className={styles.stack}>
 							<TextField
 								{...register("track", { valueAsNumber: true })}
 								label="Track"
@@ -184,12 +207,20 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 							/>
 						</Stack>
 					</DialogContent>
-				<DialogActions sx={{ px: 3, pb: 3 }}>
-					<Button onClick={onClose}>Cancel</Button>
-					<Button type="submit" variant="contained" disabled={isSubmitting}>
-						{mode === "edit" ? "Update" : "Create"}
-					</Button>
-				</DialogActions>
+
+					<DialogActions className={styles.actions}>
+						<Button onClick={onClose}>Cancel</Button>
+
+						{mode === "edit" && editingNote && (
+							<Button onClick={() => onDeleteNote(editingNote.id)} color="error">
+								Delete
+							</Button>
+						)}
+
+						<Button type="submit" variant="contained" disabled={isSubmitting}>
+							{mode === "edit" ? "Update" : "Create"}
+						</Button>
+					</DialogActions>
 				</form>
 			</FormProvider>
 		</Dialog>
