@@ -1,4 +1,4 @@
-import { TIME_RULER_WIDTH, TRACK_COUNT } from "../../_const/midi-editor.cons";
+import { TIME_RULER_WIDTH, TRACK_COUNT } from "../../../../constants/midi-editor.cons";
 import styles from "./TrackHeader.module.scss";
 
 type Props = {};

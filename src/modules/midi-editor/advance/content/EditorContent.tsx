@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
+import { TIME_RULER_WIDTH } from "../../../../constants/midi-editor.cons";
 import styles from "./EditorContent.module.scss";
 import TimeRow from "../time-row/TimeRow";
 import type { CellNotesByTime } from "../../_types/midi-editor.types";

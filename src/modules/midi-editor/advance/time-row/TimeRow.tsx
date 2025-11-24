@@ -3,7 +3,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import styles from "./TimeRow.module.scss";
 import type { CellNotes } from "../../../../types/midi-editor.types";
-import { TRACK_COUNT } from "../../_const/midi-editor.cons";
+import { TRACK_COUNT } from "../../../../constants/midi-editor.cons";
 import NoteCell from "./note-cell/NoteCell";
 
 type Props = {

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import type { MouseEvent } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import SimpleMidiEditor from "../../modules/midi-editor/simple/SimpleMidiEditor";
 import AdvancedMidiEditor from "../../modules/midi-editor/advance/AdvancedMidiEditor";
 import { useSongs } from "../../hooks/useSongs";
 import styles from "./MidiEditorPage.module.scss";
-import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection";
+import EditorHeader from "../../modules/midi-editor/editor-header/EditorHeader";
 import type { GetSongWithNotes } from "../../backend/dto/song.dto";
 
 const MidiEditorPage = () => {
@@ -16,7 +14,6 @@ const MidiEditorPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [song, setSong] = useState<GetSongWithNotes | null>(null);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
 
 	async function fetchSong() {
 		setIsLoading(true);
@@ -48,17 +45,6 @@ const MidiEditorPage = () => {
 
 	const handleBack = () => {
 		navigate("/songs");
-	};
-
-	const handleEditorModeChange = (
-		_: MouseEvent<HTMLElement>,
-		nextMode: "simple" | "advanced" | null
-	) => {
-		if (!nextMode) {
-			return;
-		}
-
-		setEditorMode(nextMode);
 	};
 
 	// ---- EFFECTS ----
@@ -94,20 +80,14 @@ const MidiEditorPage = () => {
 			);
 		}
 
-		if (editorMode === "simple") {
-			return <SimpleMidiEditor song={song} />;
-		}
-
 		return <AdvancedMidiEditor song={song} />;
 	};
 
 	return (
 		<Box className={styles.editor}>
-			<EditorInfoSection
+			<EditorHeader
 				song={song}
-				editorMode={editorMode}
 				onBack={handleBack}
-				onEditorModeChange={handleEditorModeChange}
 			/>
 			<Box className={styles.editorCard}>{renderEditorContent()}</Box>
 		</Box>
