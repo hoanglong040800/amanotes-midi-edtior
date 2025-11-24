@@ -136,7 +136,7 @@ const NoteActionPopup = ({ isOpen, maxDuration, mode = "create", editingNote, on
 									htmlInput: {
 										min: 0,
 										max: maxDuration,
-										step: 0.1,
+										step: 5,
 									},
 									input: {
 										endAdornment: <InputAdornment position="end">s</InputAdornment>,

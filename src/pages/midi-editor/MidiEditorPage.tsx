@@ -12,12 +12,14 @@ import EditorInfoSection from "../../modules/midi-editor/info/EditorInfoSection"
 const MidiEditorPage = () => {
 	const navigate = useNavigate();
 	const { songId } = useParams<{ songId: string }>();
-	const { isLoading, loadSingleSong } = useSongs();
+	const { loadSingleSong } = useSongs();
+	const [isLoading, setIsLoading] = useState(true);
 	const [song, setSong] = useState<Song | null>(null);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [editorMode, setEditorMode] = useState<"simple" | "advanced">("advanced");
 
 	async function fetchSong() {
+		setIsLoading(true);
 		setLoadError(null);
 
 		if (!songId) {
@@ -39,6 +41,8 @@ const MidiEditorPage = () => {
 		} catch {
 			setLoadError("Unable to load song");
 			setSong(null);
+		} finally {
+			setIsLoading(false);
 		}
 	}
 

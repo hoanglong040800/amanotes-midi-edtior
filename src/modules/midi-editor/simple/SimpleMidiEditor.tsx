@@ -1,5 +1,4 @@
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import NoteList from "../../notes/list/NoteList";
 import NoteActionPopup from "../../notes/action-popup/NoteActionPopup";

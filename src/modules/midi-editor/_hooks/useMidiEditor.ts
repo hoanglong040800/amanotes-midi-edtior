@@ -11,7 +11,7 @@ type UseMidiEditorParams = {
 export function useMidiEditor({ song }: UseMidiEditorParams) {
 	const [isNotePopupOpen, setNotePopupOpen] = useState(false);
 	const [editingNote, setEditingNote] = useState<Note | null>(null);
-	const [notes, setNotes] = useState<Note[]>(song.notes || []);
+	const [notes, setNotes] = useState<Note[]>([]);
 	const [cellNotesByTime, setCellNotesByTime] = useState<CellNotesByTime>({});
 	const timeline = getTimeline();
 
@@ -20,7 +20,7 @@ export function useMidiEditor({ song }: UseMidiEditorParams) {
 	useEffect(() => {
 		setNotes(song.notes);
 		setCellNotesByTime(mapNotesToCellNotesByTime(song.notes));
-	}, [song.notes]);
+	}, [song.id]);
 
 	//  ----- FUNCTIONS -----
 

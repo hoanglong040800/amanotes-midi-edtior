@@ -23,8 +23,8 @@ async function getSongById(songId: string): Promise<Song> {
 	return song;
 }
 
-async function updateSongNotes(songId: string, notes: Note[]): Promise<Song> {
-	return await SongApi.updateSong(songId, { notes });
+async function updateSongNotes(song: Song, notes: Note[]): Promise<Song> {
+	// TODO
 }
 
 function buildNewNote(input: CreateNoteInput): Note {
@@ -54,6 +54,15 @@ function buildUpdatedNote(existingNote: Note, updates: UpdateNoteInput): Note {
 
 async function createNote(songId: string, input: CreateNoteInput): Promise<Song> {
 	const song = await getSongById(songId);
+	
+	const isDuplicate = song.notes.some(
+		(note) => note.time === input.time && note.track === input.track
+	);
+
+	if (isDuplicate) {
+		throw new Error(`A note already exists at time ${input.time} on track ${input.track}`);
+	}
+
 	const newNote = buildNewNote(input);
 	const updatedNotes = [...song.notes, newNote];
 

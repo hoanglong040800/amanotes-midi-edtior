@@ -42,7 +42,6 @@ const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit 
 					<DialogContent className={styles.content} sx={{ pt: 2 }}>
 						<TextField
 							label="Name"
-							placeholder="Rock Beat"
 							{...register("name")}
 							error={Boolean(errors.name)}
 							helperText={errors.name?.message}
@@ -53,8 +52,12 @@ const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit 
 						<TextField
 							label="Duration"
 							type="number"
-							placeholder="0"
 							slotProps={{
+								htmlInput: {
+									min: 0,
+									step: 5,
+									max: 300,
+								},
 								input: {
 									endAdornment: <InputAdornment position="end">s</InputAdornment>,
 								},
