@@ -10,13 +10,14 @@ import type { Song } from "../../../backend/types/song.types";
 import { useSongActionPopup } from "../_hooks/useSongActionPopup";
 import MultiSelect from "../../../components/inputs/multi-select/MultiSelect";
 import styles from "./SongActionPopup.module.scss";
+import type { CreateSongInput, UpdateSongInput } from "../../../backend/dto/song.dto";
 
 type Props = {
 	isOpen: boolean;
 	mode: "create" | "edit";
 	initialSong?: Song;
 	onClose: () => void;
-	onCallbackSubmit: (song: Song) => void;
+	onCallbackSubmit: (song: CreateSongInput | UpdateSongInput) => void;
 };
 
 const SongActionPopup = ({ isOpen, mode, initialSong, onClose, onCallbackSubmit }: Props) => {

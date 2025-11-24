@@ -18,6 +18,7 @@ export const SONG_FORM_SCHEMA = yup.object({
 		.transform(NUMBER_TRANSFORM)
 		.typeError("Duration is required")
 		.min(0, "Duration must be 0 or greater")
+		.max(300, "Duration must be less than 300 seconds")
 		.required("Duration is required"),
 	trackLabels: yup.array().of(yup.mixed<TrackType>().oneOf(TRACK_LABEL_OPTIONS)).default([]),
 });

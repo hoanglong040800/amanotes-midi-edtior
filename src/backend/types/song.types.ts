@@ -20,7 +20,6 @@ export type Song = {
 	description: string;
 	totalDuration: number; // in seconds
 	trackLabels: TrackType[];
-	notes: Note[];
 	tags: string[];
 	createdAt: Date;
 	updatedAt: Date;

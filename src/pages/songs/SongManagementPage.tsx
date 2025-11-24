@@ -34,24 +34,26 @@ const SongListPage = () => {
 		setActionMode("create");
 	};
 
-	const handleSubmitSong = async (song: Song) => {
+	const handleSubmitSong = async (song: CreateSongInput | UpdateSongInput) => {
 		try {
 			if (actionMode === "edit" && inEditSongId !== null) {
 				const updates: UpdateSongInput = {
-					name: song.name,
-					description: song.description,
-					totalDuration: song.totalDuration,
-					trackLabels: song.trackLabels,
-					tags: song.tags,
+						...song,
+						name: song.name ?? "",
+						description: song.description ?? "",
+						totalDuration: song.totalDuration ?? 0,
+						trackLabels: song.trackLabels ?? [],
+						tags: song.tags ?? [],
 				};
 				await onUpdateSong(inEditSongId, updates);
 			} else {
 				const input: CreateSongInput = {
-					name: song.name,
-					description: song.description,
-					totalDuration: song.totalDuration,
-					trackLabels: song.trackLabels,
-					tags: song.tags,
+					...song,
+					name: song.name ?? "",
+					description: song.description ?? "",
+					totalDuration: song.totalDuration ?? 0,
+					trackLabels: song.trackLabels ?? [],
+					tags: song.tags ?? [],
 				};
 				await onCreateSong(input);
 			}

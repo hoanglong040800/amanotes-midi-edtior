@@ -1,5 +1,5 @@
 import { TrackType } from "../enums/track.enum";
-import type { Note } from "../types";
+import type { Note, Song } from "../types";
 
 export type CreateSongInput = {
 	name: string;
@@ -17,7 +17,7 @@ export type UpdateSongInput = {
 	tags?: string[];
 };
 
-export type GetAllSongs = Songs[];
+export type GetAllSongs = Song[];
 
 export type GetSongWithNotes = Song & {
 	notes: Note[];

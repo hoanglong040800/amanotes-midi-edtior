@@ -5,10 +5,11 @@ import { TrackType } from "../../../backend/enums/track.enum";
 import type { Song } from "../../../backend/types/song.types";
 import { TRACK_LABEL_OPTIONS } from "../_utils/song.utils";
 import { SONG_FORM_SCHEMA } from "../_validation/song.validation";
+import type { CreateSongInput, UpdateSongInput } from "../../../backend/dto/song.dto";
 
 type UseSongActionPopupParams = {
 	onClose: () => void;
-	onCallbackSubmit: (song: Song) => void;
+	onCallbackSubmit: (song: CreateSongInput | UpdateSongInput) => void;
 	mode: "create" | "edit";
 	initialSong?: Song;
 };
@@ -43,30 +44,22 @@ export function useSongActionPopup({
 	const trackLabelOptions = TRACK_LABEL_OPTIONS;
 
 	const submitForm = handleSubmit((values) => {
-		const timestamp = new Date();
-
 		if (mode === "edit" && initialSong) {
-			const updatedSong: Song = {
-				...initialSong,
+			const updatedSong: UpdateSongInput = {
 				name: values.name.trim(),
 				description: values.description.trim(),
 				totalDuration: values.totalDuration ?? 0,
 				trackLabels: values.trackLabels ?? [],
-				updatedAt: timestamp,
 			};
 
 			onCallbackSubmit(updatedSong);
 		} else {
-			const newSong: Song = {
-				id: Date.now(),
+			const newSong: CreateSongInput = {
 				name: values.name.trim(),
 				description: values.description.trim(),
-				trackLabels: values.trackLabels ?? [],
 				totalDuration: values.totalDuration ?? 0,
-				notes: [],
+				trackLabels: values.trackLabels ?? [],
 				tags: [],
-				createdAt: timestamp,
-				updatedAt: timestamp,
 			};
 
 			onCallbackSubmit(newSong);

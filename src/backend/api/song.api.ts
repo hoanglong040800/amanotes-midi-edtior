@@ -1,12 +1,11 @@
 import type { Song } from "../types/song.types";
-import type { CreateSongInput, UpdateSongInput } from "../dto/song.dto";
+import type { CreateSongInput, GetSongWithNotes, UpdateSongInput } from "../dto/song.dto";
 import { StorageKey } from "../../enums/common.enum";
-
+import { NoteApi } from "./note.api";
 
 const SAMPLE_SONGS_URL = "/src/backend/data/sample-songs.json";
 
 export const SongApi = {
-	fetchSongsFromRemote,
 	fetchSongs,
 	fetchSongById,
 	createSong,
@@ -14,7 +13,7 @@ export const SongApi = {
 	deleteSong,
 };
 
-async function fetchSongsFromRemote(): Promise<Song[]> {
+async function _fetchSongsFromRemote(): Promise<Song[]> {
 	const response = await fetch(SAMPLE_SONGS_URL);
 	if (!response.ok) {
 		throw new Error("Failed to load songs.");
@@ -22,7 +21,7 @@ async function fetchSongsFromRemote(): Promise<Song[]> {
 
 	const data = (await response.json()) as Song[];
 
-	await saveSongs(data);
+	await _saveSongsToLocalStorage(data);
 
 	return data;
 }
@@ -34,19 +33,30 @@ async function fetchSongs(): Promise<Song[]> {
 		return JSON.parse(cached) as Song[];
 	}
 
-	return await fetchSongsFromRemote();
+	return await _fetchSongsFromRemote();
 }
 
-async function fetchSongById(id: string): Promise<Song | null> {
-	const songs = await fetchSongs();
-	return songs.find((song) => song.id === id) ?? null;
+async function fetchSongById(id: string): Promise<GetSongWithNotes | null> {
+	const allSongs = await fetchSongs();
+	const notesBySongId = await NoteApi.fetchNotesBySongId(id);
+
+	const song = allSongs.find((song) => song.id === id) ?? null;
+
+	if (!song) {
+		return null;
+	}
+
+	return {
+		...song,
+		notes: notesBySongId,
+	};
 }
 
-async function saveSongs(songs: Song[]): Promise<void> {
+async function _saveSongsToLocalStorage(songs: Song[]): Promise<void> {
 	localStorage.setItem(StorageKey.CACHED_SONGS, JSON.stringify(songs));
 }
 
-function generateSongId(): string {
+function _generateSongId(): string {
 	return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 }
 
@@ -55,19 +65,18 @@ async function createSong(input: CreateSongInput): Promise<Song> {
 	const timestamp = new Date();
 
 	const newSong: Song = {
-		id: generateSongId(),
+		id: _generateSongId(),
 		name: input.name,
 		description: input.description,
 		totalDuration: input.totalDuration,
 		trackLabels: input.trackLabels,
-		notes: [],
 		tags: input.tags ?? [],
 		createdAt: timestamp,
 		updatedAt: timestamp,
 	};
 
 	const updatedSongs = [...songs, newSong];
-	await saveSongs(updatedSongs);
+	await _saveSongsToLocalStorage(updatedSongs);
 
 	return newSong;
 }
@@ -92,7 +101,7 @@ async function updateSong(songId: string, updates: UpdateSongInput): Promise<Son
 	const updatedSongs = [...songs];
 	updatedSongs[songIndex] = updatedSong;
 
-	await saveSongs(updatedSongs);
+	await _saveSongsToLocalStorage(updatedSongs);
 
 	return updatedSong;
 }
@@ -101,5 +110,5 @@ async function deleteSong(songId: string): Promise<void> {
 	const songs = await fetchSongs();
 	const updatedSongs = songs.filter((song) => song.id !== songId);
 
-	await saveSongs(updatedSongs);
+	await _saveSongsToLocalStorage(updatedSongs);
 }

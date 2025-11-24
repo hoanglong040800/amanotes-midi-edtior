@@ -8,6 +8,7 @@ export const NoteApi = {
 	createNote,
 	updateNote,
 	deleteNote,
+	fetchNotesBySongId
 };
 
 function generateNoteId(): number {
@@ -29,6 +30,11 @@ async function fetchAllNotesFromRemote(): Promise<Note[]> {
 	_saveNotesToLocalStorage(data);
 
 	return data;
+}
+
+async function fetchNotesBySongId(songId: string): Promise<Note[]> {
+	const allNotes = await fetchAllNotes();
+	return allNotes.filter((note) => note.song.id === songId);
 }
 
 function fetchAllNotes() {
