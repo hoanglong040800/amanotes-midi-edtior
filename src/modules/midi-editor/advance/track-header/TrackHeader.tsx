@@ -1,33 +1,16 @@
-import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
+import { TIME_RULER_WIDTH, TRACK_COUNT } from "../../_const/midi-editor.cons";
 import styles from "./TrackHeader.module.scss";
 
 type Props = {};
 
-const instruments = [
-	"Drums",
-	"Bass",
-	"Piano",
-	"Guitar",
-	"Strings",
-	"Synth",
-	"Vocals",
-	"FX",
-	"Percussion",
-	"Lead",
-];
-
 const TrackHeader = ({}: Props) => {
-	const tracks = Array.from({ length: 8 }, (_, index) => index + 1);
-	const shuffledInstruments = [...instruments]
-		.sort(() => Math.random() - 0.5)
-		.slice(0, 8);
+	const tracks = Array.from({ length: TRACK_COUNT }, (_, index) => index + 1);
 
 	return (
 		<div className={styles.trackHeader} style={{ marginLeft: TIME_RULER_WIDTH }}>
-			{tracks.map((trackNumber, index) => (
+			{tracks.map((trackNumber) => (
 				<div key={trackNumber} className={styles.cell}>
 					<span className={styles.number}>{trackNumber}</span>
-					<span className={styles.label}>{shuffledInstruments[index]}</span>
 				</div>
 			))}
 		</div>
@@ -35,4 +18,3 @@ const TrackHeader = ({}: Props) => {
 };
 
 export default TrackHeader;
-

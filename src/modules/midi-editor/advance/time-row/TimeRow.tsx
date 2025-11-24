@@ -2,28 +2,28 @@ import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import styles from "./TimeRow.module.scss";
-
-type RowData = {
-	timeLabel: string;
-};
+import type { CellNotes } from "../../_types/midi-editor.types";
+import { TRACK_COUNT } from "../../_const/midi-editor.cons";
+import NoteCell from "./note-cell/NoteCell";
 
 type Props = {
-	row: RowData;
-	trackCount: number;
+	timeMarker: number;
+	cellNotes?: CellNotes;
 };
-const TimeRow = ({ row, trackCount }: Props) => {
-	const trackColumns = Array.from({ length: trackCount });
+
+const TimeRow = ({ timeMarker, cellNotes }: Props) => {
+	const trackColumns = Array.from({ length: TRACK_COUNT }, (_, i) => i + 1);
 
 	return (
 		<TableRow className={styles.row}>
 			<TableCell className={styles.rulerCell}>
 				<Typography variant="body2" color="text.secondary">
-					{row.timeLabel}
+					{timeMarker}s
 				</Typography>
 			</TableCell>
 
-			{trackColumns.map((_, index) => (
-				<TableCell key={`track-${index}`} className={styles.trackCell} />
+			{trackColumns.map((track) => (
+				<NoteCell key={track} note={cellNotes?.[track]} />
 			))}
 		</TableRow>
 	);

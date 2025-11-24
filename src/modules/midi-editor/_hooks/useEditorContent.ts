@@ -1,54 +1,50 @@
-import { TIME_MARKER_INTERVAL } from "../_const/midi-editor.cons";
+import { useState } from "react";
+import type { Note, Song } from "../../../backend/types";
+import type { CellNotesByTime } from "../_types/midi-editor.types";
 
-type UseEditorContentParams = {
-	duration: number;
+type Props = {
+	song: Song;
 };
 
-type EditorContentRow = {
-	id: string;
-	marker: number;
-	timeLabel: string;
-	timelineLabel: string;
-};
+export const useEditorContent = ({ song }: Props) => {
+	const timeline = getTimeline();
 
-export function useEditorContent({ duration }: UseEditorContentParams) {
-	const safeDuration = Math.max(0, Number.isFinite(duration) ? duration : 0);
-	const markers = buildMarkers(safeDuration);
+	const [cellNotesByTime, setCellNotesByTime] = useState<CellNotesByTime>(
+		initCellNotesByTime(song.notes)
+	);
 
-	const rows: EditorContentRow[] = markers.map((marker, index) => {
-		return {
-			id: `marker-${marker}-${index}`,
-			marker,
-			timeLabel: `${marker}s`,
-			timelineLabel: `Timeline row ${index + 1}`,
-		};
-	});
+	function initCellNotesByTime(notes: Note[]) {
+		let result: CellNotesByTime = {};
+
+		for (const note of notes) {
+			const { time, track } = note;
+
+			result[time] = result[time] || {};
+			result[time][track] = note;
+		}
+
+		return result;
+	}
+
+	function getTimeline() {
+		const interval = 5;
+		const duration = Math.max(0, song.totalDuration);
+
+		if (duration === 0) {
+			return [0];
+		}
+
+		const segments = Math.ceil(duration / interval);
+		const timeline = Array.from({ length: segments + 1 }, (_, index) => {
+			const point = index * interval;
+			return point >= duration ? duration : point;
+		});
+
+		return timeline;
+	}
 
 	return {
-		rows,
+		timeline,
+		cellNotesByTime,
 	};
-}
-
-function buildMarkers(duration: number) {
-	if (duration < 0) {
-		return [0];
-	}
-
-	const markers: number[] = [];
-
-	for (let current = 0; current <= duration; current += TIME_MARKER_INTERVAL) {
-		markers.push(Math.round(current));
-	}
-
-	if (markers.length === 0) {
-		markers.push(0);
-	}
-
-	const lastMarker = markers[markers.length - 1];
-	if (lastMarker < duration) {
-		markers.push(Math.round(duration));
-	}
-
-	return markers;
-}
-
+};

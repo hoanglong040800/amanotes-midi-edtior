@@ -1,6 +1,10 @@
 .cell {
 	min-height: 96px;
-	padding: 24px 16px;
+	width: calc((100% - var(--ruler-width)) / 8);
+	min-width: calc((100% - var(--ruler-width)) / 8);
+	max-width: calc((100% - var(--ruler-width)) / 8);
+	padding: 16px 16px;
+	border: 1px solid #e6e9ee;
 	display: flex;
 	align-items: center;
 }

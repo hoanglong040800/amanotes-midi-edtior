@@ -21,7 +21,7 @@ const AdvancedMidiEditor = ({ song }: Props) => {
 			</Box>
 
 			<Box className={styles.content}>
-				<EditorContent duration={song.totalDuration} />
+				<EditorContent song={song} />
 			</Box>
 		</Box>
 	);

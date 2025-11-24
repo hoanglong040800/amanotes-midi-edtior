@@ -15,21 +15,21 @@
       },
       {
         "track": 2,
-        "time": 1,
+        "time": 10,
         "title": "Snare",
         "description": "Backbeat snare",
         "color": "#3B82F6"
       },
       {
         "track": 1,
-        "time": 2,
+        "time": 20,
         "title": "Kick",
         "description": "Follow-up kick",
         "color": "#EF4444"
       },
       {
         "track": 3,
-        "time": 0.5,
+        "time": 5,
         "title": "Hi-Hat",
         "description": "Closed hi-hat",
         "color": "#10B981"
@@ -52,14 +52,14 @@
       },
       {
         "track": 2,
-        "time": 0.5,
+        "time": 5,
         "title": "Bass C",
         "description": "Root note",
         "color": "#8B5CF6"
       },
       {
         "track": 1,
-        "time": 2,
+        "time": 20,
         "title": "Lead",
         "description": "Melody line",
         "color": "#06B6D4"

@@ -2,7 +2,7 @@
 	&:nth-of-type(even) {
 
 		.rulerCell,
-		.trackCell {
+		:global(.noteCell) {
 			background-color: #ffffff;
 		}
 	}
@@ -10,14 +10,13 @@
 	&:nth-of-type(odd) {
 
 		.rulerCell,
-		.trackCell {
+		:global(.noteCell) {
 			background-color: #f7f8fa;
 		}
 	}
 }
 
-.rulerCell,
-.trackCell {
+.rulerCell {
 	min-height: 96px;
 	border: 1px solid #e6e9ee;
 }
@@ -28,12 +27,4 @@
 	max-width: var(--ruler-width);
 	padding: 16px 16px;
 	border-color: #e6e9ee #cdd3dd #e6e9ee #e6e9ee;
-}
-
-.trackCell {
-	width: calc((100% - var(--ruler-width)) / 8);
-	min-width: calc((100% - var(--ruler-width)) / 8);
-	max-width: calc((100% - var(--ruler-width)) / 8);
-	padding: 16px 16px;
-	border-color: #e6e9ee;
 }

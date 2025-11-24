@@ -7,14 +7,14 @@ import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
 import { useEditorContent } from "../../_hooks/useEditorContent";
 import styles from "./EditorContent.module.scss";
 import TimeRow from "../time-row/TimeRow";
+import type { Song } from "../../../../backend/types";
 
 type Props = {
-	duration: number;
+	song: Song;
 };
 
-const EditorContent = ({ duration }: Props) => {
-	const { rows } = useEditorContent({ duration });
-	const trackCount = 8;
+const EditorContent = ({ song }: Props) => {
+	const { timeline, cellNotesByTime } = useEditorContent({ song });
 	const tableStyle = { "--ruler-width": `${TIME_RULER_WIDTH}px` } as CSSProperties;
 
 	return (
@@ -22,8 +22,12 @@ const EditorContent = ({ duration }: Props) => {
 			<TableContainer className={styles.tableContainer} style={tableStyle}>
 				<Table className={styles.table} size="small">
 					<TableBody>
-						{rows.map((row) => (
-							<TimeRow key={row.id} row={row} trackCount={trackCount} />
+						{timeline.map((timeMarker) => (
+							<TimeRow
+								key={timeMarker}
+								timeMarker={timeMarker}
+								cellNotes={cellNotesByTime[timeMarker]}
+							/>
 						))}
 					</TableBody>
 				</Table>
