@@ -1,9 +1,12 @@
-import { Fragment } from "react";
-import Typography from "@mui/material/Typography";
+import type { CSSProperties } from "react";
 import Box from "@mui/material/Box";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
 import { TIME_RULER_WIDTH } from "../../_const/midi-editor.cons";
 import { useEditorContent } from "../../_hooks/useEditorContent";
 import styles from "./EditorContent.module.scss";
+import TimeRow from "../time-row/TimeRow";
 
 type Props = {
 	duration: number;
@@ -11,30 +14,22 @@ type Props = {
 
 const EditorContent = ({ duration }: Props) => {
 	const { rows } = useEditorContent({ duration, styles });
+	const trackCount = 8;
+	const tableStyle = { "--ruler-width": `${TIME_RULER_WIDTH}px` } as CSSProperties;
 
 	return (
 		<Box className={styles.wrapper}>
-			<Box className={styles.grid} sx={{ gridTemplateColumns: `${TIME_RULER_WIDTH}px 1fr` }}>
-				{rows.map((row) => (
-					<Fragment key={row.id}>
-						<Box className={row.rulerClassName}>
-							<Typography variant="body2" color="text.secondary">
-								{row.timeLabel}
-							</Typography>
-						</Box>
-
-						<Box className={row.contentClassName}>
-							<Box className={styles.timelineLine} />
-							<Typography variant="body2" color="text.secondary" className={styles.timelineLabel}>
-								{row.timelineLabel}
-							</Typography>
-						</Box>
-					</Fragment>
-				))}
-			</Box>
+			<TableContainer className={styles.tableContainer} style={tableStyle}>
+				<Table className={styles.table} size="small">
+					<TableBody>
+						{rows.map((row) => (
+							<TimeRow key={row.id} row={row} trackCount={trackCount} />
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
 		</Box>
 	);
 };
 
 export default EditorContent;
-

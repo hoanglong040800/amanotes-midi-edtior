@@ -85,9 +85,9 @@ function buildRowClassNames({ index, lastIndex, styles }: BuildRowClassNamesPara
 		.join(" ");
 
 	const contentClassName = [
-		styles.contentCell ?? "",
-		isEvenRow ? "" : styles.contentCellAlt ?? "",
-		isLastRow ? styles.contentCellLast ?? "" : "",
+		styles.trackCell ?? "",
+		isEvenRow ? "" : styles.trackCellAlt ?? "",
+		isLastRow ? styles.trackCellLast ?? "" : "",
 	]
 		.filter(Boolean)
 		.join(" ");

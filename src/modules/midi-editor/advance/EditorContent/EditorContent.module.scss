@@ -3,33 +3,58 @@
 	flex: 1;
 	min-height: 0;
 	width: 100%;
-	border: 1px solid #dfe3ea;
 	border-radius: 8px;
+	border: 1px solid #dfe3ea;
 	background-color: #ffffff;
+	overflow: hidden;
 }
 
-.grid {
+.tableContainer {
 	flex: 1;
-	display: grid;
 	width: 100%;
-	min-width: 100%;
+	--ruler-width: 80px;
 }
 
-.row {
-	display: contents;
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
 }
 
+.rulerColumn {
+	width: var(--ruler-width);
+	min-width: var(--ruler-width);
+	max-width: var(--ruler-width);
+}
+
+.trackColumn {
+	width: calc((100% - var(--ruler-width)) / 8);
+	min-width: calc((100% - var(--ruler-width)) / 8);
+	max-width: calc((100% - var(--ruler-width)) / 8);
+}
+
+.headerRow :global(.MuiTableCell-root) {
+	padding: 0;
+}
+
+.rulerHeader,
+.trackHeader,
 .rulerCell,
-.contentCell {
-	min-height: 48px;
+.trackCell,
+.trackCellAlt {
+	min-height: 96px;
 	border-bottom: 1px solid #e6e9ee;
 }
 
+.rulerHeader,
 .rulerCell {
+	width: var(--ruler-width);
+	min-width: var(--ruler-width);
+	max-width: var(--ruler-width);
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
-	padding: 8px 16px;
+	padding: 16px 16px;
 	border-right: 1px solid #cdd3dd;
 	background-color: #f7f8fa;
 }
@@ -39,33 +64,38 @@
 }
 
 .rulerCellLast,
-.contentCellLast {
+.trackCellLast {
 	border-bottom: none;
 }
 
-.contentCell {
+.trackHeader,
+.trackCell,
+.trackCellAlt {
+	width: calc((100% - var(--ruler-width)) / 8);
+	min-width: calc((100% - var(--ruler-width)) / 8);
+	max-width: calc((100% - var(--ruler-width)) / 8);
 	position: relative;
 	display: flex;
 	align-items: center;
-	padding: 0 24px;
+	padding: 16px 16px;
+	background-color: #f7f8fa;
+}
+
+.trackCellAlt {
 	background-color: #ffffff;
 }
 
-.contentCellAlt {
-	background-color: #fbfcfd;
+.trackHeader {
+	justify-content: center;
+	border-right: 1px solid #e6e9ee;
 }
 
-.timelineLine {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background-color: #dfe3ea;
+.trackCell {
+	border-right: 1px solid #e6e9ee;
 }
 
-.timelineLabel {
-	font-size: 0.875rem;
-	color: #5a6472;
+.trackCell:last-child,
+.trackHeader:last-child {
+	border-right: none;
 }
 
