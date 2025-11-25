@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import TrackHeader from "./track-header/TrackHeader";
 import EditorContent from "./content/EditorContent";
 import styles from "./AdvancedMidiEditor.module.scss";
 import { useMidiEditor } from "../_hooks/useMidiEditor";

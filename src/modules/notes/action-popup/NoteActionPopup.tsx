@@ -68,8 +68,6 @@ const NoteActionPopup = ({
 		control,
 		register,
 		formState: { errors, isSubmitting },
-		setValue,
-		getValues,
 	} = form;
 
 	// ----- EFFECTS -----
@@ -118,8 +116,8 @@ const NoteActionPopup = ({
 			});
 		}
 
-		reset(DEFAULT_VALUES);
 		onClose();
+		reset(DEFAULT_VALUES);
 	});
 
 	// ----- RENDER -----
