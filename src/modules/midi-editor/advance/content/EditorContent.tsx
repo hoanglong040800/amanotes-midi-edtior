@@ -33,6 +33,8 @@ const EditorContent = ({ timeline, cellNotesByTime }: Props) => {
 							/>
 						))}
 					</TableBody>
+
+					<TrackRow trackColumns={trackColumns} />
 				</Table>
 			</TableContainer>
 		</Box>
