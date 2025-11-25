@@ -17,9 +17,7 @@ const EditorHeader = ({ song, onBack }: Props) => (
 				onClick={onBack}
 				className={styles.backButton}
 				startIcon={<ArrowBackIosNewIcon fontSize="small" />}
-			>
-				Back to songs
-			</Button>
+			></Button>
 
 			<Typography variant="h4" component="h1" className={styles.title}>
 				{song?.name || "MIDI Editor"}

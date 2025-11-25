@@ -1,8 +1,8 @@
 import TableCell from "@mui/material/TableCell";
 import styles from "./NoteCell.module.scss";
-import Typography from "@mui/material/Typography";
 import type { Note } from "../../../../../backend/types";
 import { useMidiEditorActions } from "../../../_context/MidiEditorActionsContext";
+import { Box } from "@mui/material";
 
 type Props = {
 	note?: Note;
@@ -30,12 +30,8 @@ const NoteCell = ({ note, time, track }: Props) => {
 	}
 
 	return (
-		<TableCell
-			className={cellClassName}
-			onClick={handleClick}
-			style={{ backgroundColor: note.color }}
-		>
-			<Typography variant="body2">{note.title}</Typography>
+		<TableCell className={cellClassName} onClick={handleClick}>
+			<Box style={{ backgroundColor: note.color }} className={styles.dot}></Box>
 		</TableCell>
 	);
 };

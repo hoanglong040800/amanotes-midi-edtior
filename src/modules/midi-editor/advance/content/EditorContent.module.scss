@@ -6,7 +6,8 @@
 	border-radius: 8px;
 	border: 1px solid #dfe3ea;
 	background-color: #ffffff;
-	overflow: hidden;
+	overflow-x: scroll;
+	overflow-y: scroll;
 }
 
 .tableContainer {

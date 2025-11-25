@@ -36,10 +36,6 @@ const AdvancedMidiEditor = ({ song }: Props) => {
 			}}
 		>
 			<Box className={styles.container}>
-				<Box className={styles.headerWrapper}>
-					<TrackHeader />
-				</Box>
-
 				<Box className={styles.content}>
 					<EditorContent timeline={timeline} cellNotesByTime={cellNotesByTime} />
 				</Box>
